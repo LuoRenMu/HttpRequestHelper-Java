@@ -8,7 +8,7 @@ import lombok.Data;
  * Date 2023.10.28 20:17
  */
 @Data
-public class SingInInfoRespone {
+public class SignInInfoRespone {
     private int retcode;
     private String message;
 

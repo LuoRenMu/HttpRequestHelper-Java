@@ -6,7 +6,7 @@ import java.util.List;
  * @author LoMu
  * Date 2023.10.29 13:55
  */
-public class SingInRewardInfo {
+public class SignInRewardInfo {
     private int retcode;
     private String message;
 

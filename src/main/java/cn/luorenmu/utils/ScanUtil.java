@@ -3,6 +3,8 @@ package cn.luorenmu.utils;
 import cn.luorenmu.Main;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Objects;
@@ -16,8 +18,14 @@ public class ScanUtil {
     public static final Properties prop = new Properties();
 
     static {
-        String filePath = Objects.requireNonNull(Main.class.getClassLoader().getResource("cn/luorenmu")).getFile();
-        String path = filePath.replaceAll("%20", " ");
+        String path = Objects.requireNonNull(Main.class.getClassLoader().getResource("cn/luorenmu")).getFile();
+        if (path.contains("%")) {
+            try {
+                path = URLDecoder.decode(path, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
         path = path.substring(1, path.lastIndexOf("cn"));
         try {
             prop.load(Files.newInputStream(Paths.get(path + "config.properties")));
@@ -25,4 +33,6 @@ public class ScanUtil {
             LoggerUtil.log.warning(e.toString());
         }
     }
+
+    
 }

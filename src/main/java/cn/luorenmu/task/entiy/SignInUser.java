@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
 @Data
-public class SingInUsers {
+public class SignInUser {
     private Games games;
     private String email;
     @Setter(AccessLevel.NONE)
@@ -22,7 +22,7 @@ public class SingInUsers {
     private String cookie;
 
 
-    public SingInUsers setUid(Long uid) {
+    public SignInUser setUid(Long uid) {
         this.uid = uid;
         this.uidParam = "&uid=" + uid;
         return this;
