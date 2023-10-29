@@ -12,5 +12,6 @@ import lombok.Data;
 public class Config {
     private String cookie;
     private String serverChanKey;
-    private String serverChanUrl;
+    private String serverChanUrl = "https://sctapi.ftqq.com/";
+    private String email;
 }
