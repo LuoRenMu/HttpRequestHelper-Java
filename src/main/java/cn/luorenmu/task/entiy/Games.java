@@ -1,5 +1,10 @@
 package cn.luorenmu.task.entiy;
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
 /**
  * @author LoMu
  * Date 2023.10.28 15:59
@@ -7,16 +12,36 @@ package cn.luorenmu.task.entiy;
 
 
 public enum Games {
-    STAR_RAIL("&act_id=e202304121516551&region=prod_gf_cn");
+    STAR_RAIL(new GameInfo().setActId("e202304121516551").setGameBiz("hkrpg_cn").setRegion("prod_gf_cn"));
 
 
-    private final String display;
+    private final GameInfo display;
 
-    Games(String string) {
-        display = string;
+    Games(GameInfo a) {
+        display = a;
     }
 
-    public String getDisplay() {
-        return display;
+    public String getActId() {
+        return display.getActId();
+    }
+
+    public String getParam() {
+        return display.getParam();
+    }
+
+    @Data
+    @Accessors(chain = true)
+    public static class GameInfo {
+        private String actId;
+        private String region;
+        @Setter(AccessLevel.NONE)
+        private String param;
+        private String gameBiz;
+
+        public GameInfo setActId(String actId) {
+            this.actId = actId;
+            this.param = String.format("&act_id=%s&region=%s", actId, region);
+            return this;
+        }
     }
 }

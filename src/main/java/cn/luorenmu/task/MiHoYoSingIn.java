@@ -7,7 +7,6 @@ import cn.luorenmu.notification.ServerChanNotification;
 import cn.luorenmu.task.entiy.Games;
 import cn.luorenmu.task.entiy.SingInUsers;
 import cn.luorenmu.utils.LoggerUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -26,7 +25,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class MiHoYoSingIn {
     private final static String SIGN_IN_URL = "https://api-takumi.mihoyo.com/event/luna/info?lang=zh-cn";
-    private final static ObjectMapper ob = new ObjectMapper();
 
 
     public void singIn() {
@@ -47,10 +45,11 @@ public class MiHoYoSingIn {
 
         threadPool.scheduleAtFixedRate(() -> {
             for (SingInUsers user : userList) {
-                HttpRequest httpRequest = HttpUtil.createGet(SIGN_IN_URL + user.getGames().getDisplay() + user.getUidParam());
+                HttpRequest httpRequest = HttpUtil.createGet(SIGN_IN_URL + user.getGames().getParam() + user.getUidParam());
                 Map<String, String> headers = setCookie(user.getCookie());
                 httpRequest.addHeaders(headers);
                 HttpResponse response = httpRequest.execute();
+
                 String message = "StarRail签到已完成! ----" + response;
                 LoggerUtil.log.info(message);
                 LoggerUtil.log.info("本月已连续签到:" + response);
