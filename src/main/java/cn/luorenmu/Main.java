@@ -1,7 +1,7 @@
 package cn.luorenmu;
 
 
-import cn.luorenmu.task.MiHoYoSignIn;
+import cn.luorenmu.task.MiHoYoSign;
 import cn.luorenmu.utils.LoggerUtil;
 
 /**
@@ -12,7 +12,7 @@ public class Main {
 
     public static void main(String[] args) {
         LoggerUtil.log.info("已经开始工作,每日早上10点将开始自动签到");
-        MiHoYoSignIn miHoYoSingIn = new MiHoYoSignIn();
-        miHoYoSingIn.singIn();
+        MiHoYoSign miHoYoSingIn = new MiHoYoSign();
+        miHoYoSingIn.signTimer();
     }
 }

@@ -22,3 +22,5 @@ https://api-takumi.mihoyo.com/event/luna/sign
 
 #签到信息
 https://api-takumi.mihoyo.com/event/luna/info?lang=zh-cn&act_id={}&region={}&uid={}
+
+

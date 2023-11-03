@@ -9,7 +9,7 @@ import java.util.List;
  * Date 2023.10.29 13:55
  */
 @Data
-public class SignInRewardInfo {
+public class SignRewardInfo {
     private int retcode;
     private String message;
     private GameData data;
