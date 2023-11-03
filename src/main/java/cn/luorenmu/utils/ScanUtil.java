@@ -1,6 +1,7 @@
 package cn.luorenmu.utils;
 
 import cn.luorenmu.Main;
+import cn.luorenmu.entiy.Config;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -34,5 +35,10 @@ public class ScanUtil {
         }
     }
 
+    public static void main(String[] args) {
+        Config config = new Config();
+        config.setCookie(prop.get("cookie").toString());
+        System.out.println(config);
+    }
     
 }

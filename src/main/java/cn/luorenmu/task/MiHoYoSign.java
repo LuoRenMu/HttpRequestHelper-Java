@@ -108,4 +108,9 @@ public class MiHoYoSign {
         return null;
     }
 
+    private String cookieToUid(String cookie) {
+
+        return null;
+    }
+
 }
