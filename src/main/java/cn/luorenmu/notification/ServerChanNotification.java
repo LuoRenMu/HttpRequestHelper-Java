@@ -3,8 +3,8 @@ package cn.luorenmu.notification;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
-import cn.luorenmu.utils.LoggerUtil;
-import cn.luorenmu.utils.ScanUtil;
+import cn.luorenmu.common.utils.LoggerUtil;
+import cn.luorenmu.common.utils.ScanUtil;
 
 
 /**

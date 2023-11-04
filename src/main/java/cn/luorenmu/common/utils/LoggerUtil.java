@@ -1,4 +1,4 @@
-package cn.luorenmu.utils;
+package cn.luorenmu.common.utils;
 
 import cn.luorenmu.Main;
 

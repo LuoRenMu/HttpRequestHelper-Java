@@ -1,8 +1,8 @@
 package cn.luorenmu;
 
 
+import cn.luorenmu.common.utils.LoggerUtil;
 import cn.luorenmu.task.MiHoYoSign;
-import cn.luorenmu.utils.LoggerUtil;
 
 /**
  * @author LoMu

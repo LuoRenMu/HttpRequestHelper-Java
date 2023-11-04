@@ -2,9 +2,9 @@ package cn.luorenmu.task;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
+import cn.luorenmu.common.utils.LoggerUtil;
 import cn.luorenmu.notification.ServerChanNotification;
 import cn.luorenmu.task.entiy.*;
-import cn.luorenmu.utils.LoggerUtil;
 import com.alibaba.fastjson2.JSON;
 
 import java.time.Duration;
