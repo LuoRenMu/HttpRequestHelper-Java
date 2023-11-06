@@ -1,6 +1,8 @@
 package cn.luorenmu.task.entiy;
 
+import cn.luorenmu.task.entiy.account.MihoyoResponse;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -8,10 +10,9 @@ import java.util.List;
  * @author LoMu
  * Date 2023.10.29 13:55
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class SignRewardInfo {
-    private int retcode;
-    private String message;
+public class SignRewardInfo extends MihoyoResponse {
     private GameData data;
 
 

@@ -1,5 +1,6 @@
-package cn.luorenmu.task.entiy;
+package cn.luorenmu.task.entiy.account;
 
+import cn.luorenmu.task.entiy.Games;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
@@ -18,11 +19,11 @@ public class SignInUser {
     @Setter(AccessLevel.NONE)
     private String uidParam;
     @Setter(AccessLevel.NONE)
-    private Long uid;
+    private String uid;
     private String cookie;
 
 
-    public SignInUser setUid(Long uid) {
+    public SignInUser setUid(String uid) {
         this.uid = uid;
         this.uidParam = "&uid=" + uid;
         return this;

@@ -7,6 +7,7 @@ https://passport-api.mihoyo.com/account/auth/api/getCookieAccountInfoBySToken
 #用户信息 会返回Token
 https://api-takumi.miyoushe.com/auth/api/getActionTicketBySToken?uid=76646516&action_type=game_role
 
+
 #通过token获取游戏信息
 https://api-takumi.mihoyo.com/binding/api/getUserGameRoles?action_ticket=3W60i6YRm3QgU4OIt7ocvltDoIEPJXayb9rwvbYZ&game_biz=hkrpg_cn
 

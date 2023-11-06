@@ -3,11 +3,14 @@ package cn.luorenmu.common.auto;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.function.Function;
 
 /**
  * @author LoMu
  * Date 2023.11.04 15:03
  */
+
+//该类用于将字符串自动装配到对象
 public class Automatic {
     public static void AutoSetFieldEquals(Object object, Class<?> classo, String fieldName, Class<?> classa, Object... args) {
         Field[] fields = classo.getDeclaredFields();
@@ -26,16 +29,9 @@ public class Automatic {
         }
     }
 
-    public static void AutoSetFieldSplitContains(Object object, Class<?> classo, String args, Class<?> classa) {
+    public static void AutoSetFieldFunctionContains(Object object, Class<?> classo, String args, Class<?> classa, Function<String, String[]> function) {
         Field[] fields = classo.getDeclaredFields();
-        String[] split = null;
-        if (args != null) {
-            if (args.contains(",")) {
-                split = args.split(",");
-            } else if (args.contains(";")) {
-                split = args.split(";");
-            }
-        }
+        String[] split = function.apply(args);
 
         assert split != null;
         for (String s : split) {

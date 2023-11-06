@@ -34,6 +34,7 @@ public class ScanUtil {
         try {
             prop.load(Files.newInputStream(Paths.get(path + "config.properties")));
         } catch (IOException e) {
+            LoggerUtil.log.warning(e.toString());
             throw new RuntimeException("config load failed  ):");
         }
 

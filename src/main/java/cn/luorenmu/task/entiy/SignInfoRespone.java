@@ -1,17 +1,17 @@
 package cn.luorenmu.task.entiy;
 
+import cn.luorenmu.task.entiy.account.MihoyoResponse;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
 /**
  * @author LoMu
  * Date 2023.10.28 20:17
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class SignInfoRespone {
-    private int retcode;
-    private String message;
-
+public class SignInfoRespone extends MihoyoResponse {
     private Data data;
 
     @lombok.Data

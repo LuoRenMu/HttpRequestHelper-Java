@@ -1,21 +1,22 @@
 package cn.luorenmu.task;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpUtil;
-import cn.luorenmu.common.utils.LoggerUtil;
+import cn.luorenmu.common.utils.ScanUtil;
+import cn.luorenmu.mihoyo.MihoyoAccountService;
 import cn.luorenmu.notification.ServerChanNotification;
-import cn.luorenmu.task.entiy.*;
-import com.alibaba.fastjson2.JSON;
+import cn.luorenmu.task.entiy.Games;
+import cn.luorenmu.task.entiy.SignInfoRespone;
+import cn.luorenmu.task.entiy.account.MihoyoUserTokenResponse;
+import cn.luorenmu.task.entiy.account.SignInUser;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static cn.luorenmu.mihoyo.MihoyoAccountService.setSignMiHoyoForm;
 
 
 /**
@@ -23,38 +24,17 @@ import java.util.concurrent.TimeUnit;
  * Date 2023.10.28 18:47
  */
 public class MiHoYoSign {
-    private final static String SIGN_INFO_URL = "https://api-takumi.mihoyo.com/event/luna/info?lang=zh-cn";
-    private final static String SIGN_URL = "https://api-takumi.mihoyo.com/event/luna/sign";
+
+    private final MihoyoAccountService mihoyoAccountService = new MihoyoAccountService();
 
 
-
-    public static Map<String, String> setMiHoyoForm() {
-
-        return null;
-    }
-
-    private static Map<String, String> setCookie(String cookie) {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Cookie", cookie);
-        return headers;
-    }
-
-    private SignInfoRespone getSignInfoRespone(SignInUser signInUser) {
-        HttpRequest httpRequest = HttpUtil.createGet(SIGN_INFO_URL + signInUser.getGames().getParam() + signInUser.getUidParam());
-        Map<String, String> headers = setCookie(signInUser.getCookie());
-        httpRequest.addHeaders(headers);
-        return JSON.parseObject(httpRequest.execute().body(), SignInfoRespone.class);
-    }
-
-    private SignRewardInfo getSignRewardInfo(String gameId) {
-        HttpRequest httpRequest = HttpUtil.createGet("https://api-takumi.mihoyo.com/event/luna/home?lang=zh-cn&act_id=e202304121516551");
-        return JSON.parseObject(httpRequest.execute().body(), SignRewardInfo.class);
-    }
-
-
-    public void signTimer() {
+    public void signTimerTask() {
         List<SignInUser> userList = new ArrayList<>();
-        userList.add(new SignInUser().setUid(101106135L).setGames(Games.STAR_RAIL).setEmail("luorenmu@qq.com").setCookie("uni_web_token=; cookie_token=9YYx0BphGmyQ8gpVRPMJDPzS7zYrkjkl4kUcd3JR; account_id=76646516; ltoken=YLvSGPDyiqahDLw1iDtd90l2wj00dMaEi51MyQ7G; ltuid=76646516; cookie_token_v2=v2_uUGuEDU3U1cSboPDHtymgPZ7nG2HS_91iliWf7UwdHMdccJCSbBW2PI5QyskjJRoTjnziypWTH7PySeU5E9ZYp1paa4P0Oa7UHrQWYW5Mb6UcNIF2Dj_Zhhx81adHlE=; account_mid_v2=0vys9gt43m_mhy; account_id_v2=76646516; ltoken_v2=v2_tE2f6NdNfkQmFjC6vWUsGBJgGWD7UF_4tnTZtIpxdrJTOEUKxTxmsB_x9luXKk7pN58lsq4EG9IGup-sp3zbT3gZbHnIwLCYMisNQVm98pQbz3jc44lJ0FtQYgcYAts=; ltmid_v2=0vys9gt43m_mhy; ltuid_v2=76646516"));
+        String cookieStr = ScanUtil.config.getCookie();
+        MihoyoUserTokenResponse cookieAccountInfoBySToken = mihoyoAccountService.getCookieAccountInfoBySToken(cookieStr);
+        MihoyoUserTokenResponse.UserTokenData data = cookieAccountInfoBySToken.getData();
+        userList.add(new SignInUser().setCookie(cookieStr).setGames(Games.STAR_RAIL).setUid(data.getUid()));
+
         ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(1);
 
         LocalDateTime now = LocalDateTime.now();
@@ -70,47 +50,20 @@ public class MiHoYoSign {
 
         threadPool.scheduleAtFixedRate(() -> {
             for (SignInUser user : userList) {
-                SignInfoRespone signInInfoRespone = getSignInfoRespone(user);
+                SignInfoRespone signInInfoRespone = mihoyoAccountService.getSignInfoRespone(user);
                 if (signInInfoRespone.getData().isSign()) {
                     ServerChanNotification.sendMessageTitle("今天的签到已经完成");
                     return;
                 }
-                signOperate(user, Map.of("1", "1"));
-
+                String message = mihoyoAccountService.signOperate(user, setSignMiHoyoForm(user.getUid(), Games.STAR_RAIL));
+                ServerChanNotification.sendMessageTitle(message);
 
             }
         }, initailDelay, period, TimeUnit.MINUTES);
     }
 
-    private SignRewardInfo.GameData.Award getToDaySignInfo(SignInUser signInUser, String gameId) {
-        SignRewardInfo signInRewardInfo = getSignRewardInfo(gameId);
-        List<SignRewardInfo.GameData.Award> awards = signInRewardInfo.getData().getAwards();
-        int SignInDay = getSignInfoRespone(signInUser).getData().getShortSignDay();
-        return awards.get(SignInDay - 1);
-    }
-
-    private String signOperate(SignInUser user, Map<String, String> form) {
-        HttpRequest post = HttpRequest.post(SIGN_URL);
-        post.addHeaders(setCookie(user.getCookie()));
-        post.formStr(form);
-        String body = post.execute().body();
-        SignRespone signRespone = JSON.parseObject(body, SignRespone.class);
-        if (signRespone.getData().getGt().isEmpty()) {
-            LoggerUtil.log.info(signRespone.toString());
-            return "签到完成";
-        }
-
-        String gt = signRespone.getData().getGt();
-        String challenge = signRespone.getData().getChallenge();
 
 
 
-        return null;
-    }
-
-    private String cookieToUid(String cookie) {
-
-        return null;
-    }
 
 }

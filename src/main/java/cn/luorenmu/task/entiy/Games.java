@@ -2,6 +2,7 @@ package cn.luorenmu.task.entiy;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -11,22 +12,23 @@ import lombok.experimental.Accessors;
  */
 
 
+@Getter
 public enum Games {
     STAR_RAIL(new GameInfo().setActId("e202304121516551").setGameBiz("hkrpg_cn").setRegion("prod_gf_cn"));
 
-
-    private final GameInfo display;
+    private final GameInfo gameInfo;
 
     Games(GameInfo a) {
-        display = a;
+        gameInfo = a;
     }
 
     public String getActId() {
-        return display.getActId();
+        return gameInfo.getActId();
     }
 
+
     public String getParam() {
-        return display.getParam();
+        return gameInfo.getParam();
     }
 
     @Data

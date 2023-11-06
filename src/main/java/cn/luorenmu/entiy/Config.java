@@ -12,23 +12,34 @@ import lombok.Data;
 
 @Data
 public class Config {
-    private Cookie cookie;
+    private SToken sToken;
     private String serverChanKey;
-    private String serverChanUrl = "https://sctapi.ftqq.com/";
+    private String serverChanUrl;
     private String email;
+    private String cookie;
 
-    public void setCookie(String cookieStr) {
-        cookie = new Cookie();
-        cookie.setCookieStr(cookieStr);
-        Automatic.AutoSetFieldSplitContains(cookie, Cookie.class, cookieStr, String.class);
+    public void setSToken(String sTokenStr) {
+        sToken = new SToken();
+        sToken.setSTokenStr(sTokenStr);
+        Automatic.AutoSetFieldFunctionContains(sToken, SToken.class, sTokenStr, String.class, args -> {
+            String[] split = null;
+            if (args != null) {
+                if (args.contains(",")) {
+                    split = args.split(",");
+                } else if (args.contains(";")) {
+                    split = args.split(";");
+                }
+            }
+            return split;
+        });
     }
 
     @Data
-    public static class Cookie {
+    public static class SToken {
         private String stuid;
         private String stoken;
         private String mid;
-        private String cookieStr;
+        private String sTokenStr;
 
     }
 }
