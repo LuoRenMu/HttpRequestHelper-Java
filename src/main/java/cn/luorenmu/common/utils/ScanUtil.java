@@ -27,7 +27,8 @@ public class ScanUtil {
             try {
                 path = URLDecoder.decode(path, "UTF-8");
             } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
+                LoggerUtil.log.warning(e.toString());
+                throw new RuntimeException("system path get failed, use english plz");
             }
         }
         path = path.substring(1, path.lastIndexOf("cn"));

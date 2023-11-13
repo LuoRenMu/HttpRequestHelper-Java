@@ -1,5 +1,6 @@
 package cn.luorenmu.task.entiy.account;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,6 +16,8 @@ public class MihoyoUserTokenResponse extends MihoyoResponse {
     @Data
     public static class UserTokenData {
         private String uid;
+        @JSONField(name = "cookie_token")
         private String cookieToken;
     }
+
 }

@@ -1,6 +1,7 @@
 package cn.luorenmu.task;
 
 import cn.luorenmu.common.utils.ScanUtil;
+import cn.luorenmu.entiy.Config;
 import cn.luorenmu.mihoyo.MihoyoAccountService;
 import cn.luorenmu.notification.ServerChanNotification;
 import cn.luorenmu.task.entiy.Games;
@@ -31,7 +32,9 @@ public class MiHoYoSign {
     public void signTimerTask() {
         List<SignInUser> userList = new ArrayList<>();
         String cookieStr = ScanUtil.config.getCookie();
-        MihoyoUserTokenResponse cookieAccountInfoBySToken = mihoyoAccountService.getCookieAccountInfoBySToken(cookieStr);
+        Config.SToken sToken = ScanUtil.config.getSToken();
+        MihoyoUserTokenResponse cookieAccountInfoBySToken = mihoyoAccountService.getCookieAccountInfoBySToken(sToken.getSTokenStr());
+        System.out.println(cookieAccountInfoBySToken);
         MihoyoUserTokenResponse.UserTokenData data = cookieAccountInfoBySToken.getData();
         userList.add(new SignInUser().setCookie(cookieStr).setGames(Games.STAR_RAIL).setUid(data.getUid()));
 

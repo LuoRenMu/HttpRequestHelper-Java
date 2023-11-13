@@ -43,9 +43,9 @@ public class MihoyoAccountService {
         return headers;
     }
 
-    public MihoyoUserTokenResponse getCookieAccountInfoBySToken(String cookie) {
+    public MihoyoUserTokenResponse getCookieAccountInfoBySToken(String sToken) {
         HttpRequest httpRequest = HttpRequest.get("https://passport-api.mihoyo.com/account/auth/api/getCookieAccountInfoBySToken");
-        httpRequest.addHeaders(setCookie(cookie));
+        httpRequest.addHeaders(setCookie(sToken));
         HttpResponse execute = httpRequest.execute();
         return JSON.parseObject(execute.body(), MihoyoUserTokenResponse.class);
 
