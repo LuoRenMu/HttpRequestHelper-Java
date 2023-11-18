@@ -3,11 +3,11 @@ package cn.luorenmu.task;
 import cn.luorenmu.common.utils.ScanUtil;
 import cn.luorenmu.entiy.Config;
 import cn.luorenmu.mihoyo.MihoyoAccountService;
+import cn.luorenmu.mihoyo.entiy.Games;
+import cn.luorenmu.mihoyo.entiy.SignInfoRespone;
+import cn.luorenmu.mihoyo.entiy.account.MihoyoUserTokenResponse;
+import cn.luorenmu.mihoyo.entiy.account.SignInUser;
 import cn.luorenmu.notification.ServerChanNotification;
-import cn.luorenmu.task.entiy.Games;
-import cn.luorenmu.task.entiy.SignInfoRespone;
-import cn.luorenmu.task.entiy.account.MihoyoUserTokenResponse;
-import cn.luorenmu.task.entiy.account.SignInUser;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

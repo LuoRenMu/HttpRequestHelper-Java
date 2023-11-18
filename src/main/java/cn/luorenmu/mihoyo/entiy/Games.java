@@ -1,4 +1,4 @@
-package cn.luorenmu.task.entiy;
+package cn.luorenmu.mihoyo.entiy;
 
 import lombok.AccessLevel;
 import lombok.Data;

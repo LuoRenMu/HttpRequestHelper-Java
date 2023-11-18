@@ -1,6 +1,5 @@
-package cn.luorenmu.task.entiy;
+package cn.luorenmu.mihoyo.entiy;
 
-import cn.luorenmu.task.entiy.account.MihoyoResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

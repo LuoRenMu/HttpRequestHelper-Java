@@ -1,4 +1,4 @@
-package cn.luorenmu.task.entiy.account;
+package cn.luorenmu.mihoyo.entiy;
 
 import lombok.Data;
 

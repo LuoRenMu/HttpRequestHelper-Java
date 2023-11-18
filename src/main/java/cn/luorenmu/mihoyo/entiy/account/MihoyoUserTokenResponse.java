@@ -1,6 +1,8 @@
-package cn.luorenmu.task.entiy.account;
+package cn.luorenmu.mihoyo.entiy.account;
 
-import com.alibaba.fastjson2.annotation.JSONField;
+import cn.luorenmu.mihoyo.entiy.MihoyoResponse;
+import com.alibaba.fastjson2.PropertyNamingStrategy;
+import com.alibaba.fastjson2.annotation.JSONType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,9 +16,9 @@ public class MihoyoUserTokenResponse extends MihoyoResponse {
     private UserTokenData data;
 
     @Data
+    @JSONType(naming = PropertyNamingStrategy.SnakeCase)
     public static class UserTokenData {
         private String uid;
-        @JSONField(name = "cookie_token")
         private String cookieToken;
     }
 

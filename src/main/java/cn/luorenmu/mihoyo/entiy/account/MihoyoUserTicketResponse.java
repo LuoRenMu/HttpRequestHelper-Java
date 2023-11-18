@@ -1,5 +1,8 @@
-package cn.luorenmu.task.entiy.account;
+package cn.luorenmu.mihoyo.entiy.account;
 
+import cn.luorenmu.mihoyo.entiy.MihoyoResponse;
+import com.alibaba.fastjson2.PropertyNamingStrategy;
+import com.alibaba.fastjson2.annotation.JSONType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,11 +15,13 @@ import lombok.EqualsAndHashCode;
 public class MihoyoUserTicketResponse extends MihoyoResponse {
 
     @Data
+    @JSONType(naming = PropertyNamingStrategy.SnakeCase)
     public static class ActionTicketBySTokenData {
         private String ticket;
         private boolean isVerified;
 
         @Data
+        @JSONType(naming = PropertyNamingStrategy.SnakeCase)
         public static class TicketAccountInfo {
             private String accountId;
             private String accountName;
