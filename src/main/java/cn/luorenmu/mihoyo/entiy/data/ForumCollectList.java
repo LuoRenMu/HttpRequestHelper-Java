@@ -14,12 +14,12 @@ import java.util.List;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ForumCollectListInfo extends MihoyoResponse {
+public class ForumCollectList extends MihoyoResponse {
     private CollectListData data;
 
     @Data
     @JSONType(naming = PropertyNamingStrategy.SnakeCase)
-    public static class ForumArticle {
+    public static class ForumArticleSimple {
         private String postId;
         private String subject;
         private String content;
@@ -35,6 +35,6 @@ public class ForumCollectListInfo extends MihoyoResponse {
 
     @Data
     public static class CollectListData {
-        private List<ForumArticle> list;
+        private List<ForumArticleSimple> list;
     }
 }

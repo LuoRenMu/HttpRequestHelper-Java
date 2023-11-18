@@ -12,7 +12,7 @@ import cn.luorenmu.common.utils.ScanUtil;
  * Date 2023.10.28 18:57
  */
 public class ServerChanNotification {
-    private final static String URL = ScanUtil.config.getServerChanUrl() + ScanUtil.config.getServerChanKey() + ".send?";
+    private final static String URL = ScanUtil.CONFIG.getServerChanUrl() + ScanUtil.CONFIG.getServerChanKey() + ".send?";
 
 
     public static void sendMessageTitle(String title) {

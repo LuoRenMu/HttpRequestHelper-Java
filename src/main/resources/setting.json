@@ -1,0 +1,22 @@
+{
+  "mihoyo": {
+    "account": [
+      {
+        "cookie": "",
+        "server_chan_key": "",
+        "email": ""
+      }
+    ]
+  },
+  "general": {
+    "mail": {
+      "host": "",
+      "port": "",
+      "from": "",
+      "user": "",
+      "pass": "",
+      "starttls": true,
+      "ssl": false
+    }
+  }
+}

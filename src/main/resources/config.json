@@ -1,0 +1,34 @@
+{
+  "mihoyo": {
+    "forum": {
+      "article_collect": {
+        "request": "https://bbs-api.miyoushe.com/collection/api/collection/getCollectionPostList",
+        "method": "get",
+        "param": [
+          {
+            "name": "collection_id",
+            "content": "{id}"
+          },
+          {
+            "name": "order_type",
+            "content": "2"
+          }
+        ]
+      },
+      "article": {
+        "request": "https://bbs-api.miyoushe.com/post/api/getPostFull?post_id=\"+ postId +\"&csm_source=search",
+        "method": "get",
+        "param": [
+          {
+            "name": "post_id",
+            "content": "{id}"
+          },
+          {
+            "name": "csm_source",
+            "content": "search"
+          }
+        ]
+      }
+    }
+  }
+}

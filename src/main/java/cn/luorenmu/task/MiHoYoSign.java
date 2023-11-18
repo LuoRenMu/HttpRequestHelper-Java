@@ -31,8 +31,8 @@ public class MiHoYoSign {
 
     public void signTimerTask() {
         List<SignInUser> userList = new ArrayList<>();
-        String cookieStr = ScanUtil.config.getCookie();
-        Config.SToken sToken = ScanUtil.config.getSToken();
+        String cookieStr = ScanUtil.CONFIG.getCookie();
+        Config.SToken sToken = ScanUtil.CONFIG.getSToken();
         MihoyoUserTokenResponse cookieAccountInfoBySToken = mihoyoAccountService.getCookieAccountInfoBySToken(sToken.getSTokenStr());
         System.out.println(cookieAccountInfoBySToken);
         MihoyoUserTokenResponse.UserTokenData data = cookieAccountInfoBySToken.getData();
