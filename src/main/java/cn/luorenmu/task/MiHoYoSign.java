@@ -2,7 +2,7 @@ package cn.luorenmu.task;
 
 import cn.luorenmu.common.utils.ScanUtil;
 import cn.luorenmu.entiy.Config;
-import cn.luorenmu.mihoyo.MihoyoAccountService;
+import cn.luorenmu.mihoyo.MihoyoAccountRequest;
 import cn.luorenmu.mihoyo.entiy.Games;
 import cn.luorenmu.mihoyo.entiy.SignInfoRespone;
 import cn.luorenmu.mihoyo.entiy.account.MihoyoUserTokenResponse;
@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static cn.luorenmu.mihoyo.MihoyoAccountService.setSignMiHoyoForm;
+import static cn.luorenmu.mihoyo.MihoyoAccountRequest.setSignMiHoyoForm;
 
 
 /**
@@ -26,7 +26,7 @@ import static cn.luorenmu.mihoyo.MihoyoAccountService.setSignMiHoyoForm;
  */
 public class MiHoYoSign {
 
-    private final MihoyoAccountService mihoyoAccountService = new MihoyoAccountService();
+    private final MihoyoAccountRequest mihoyoAccountService = new MihoyoAccountRequest();
 
 
     public void signTimerTask() {

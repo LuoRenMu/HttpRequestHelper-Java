@@ -22,7 +22,7 @@ import java.util.Map;
  * @author LoMu
  * Date 2023.11.06 17:13
  */
-public class MihoyoAccountService {
+public class MihoyoAccountRequest {
 
     private final static String SIGN_INFO_URL = "https://api-takumi.mihoyo.com/event/luna/info?lang=zh-cn";
     private final static String SIGN_URL = "https://api-takumi.mihoyo.com/event/luna/sign";

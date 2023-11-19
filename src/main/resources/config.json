@@ -16,7 +16,7 @@
         ]
       },
       "article": {
-        "request": "https://bbs-api.miyoushe.com/post/api/getPostFull?post_id=\"+ postId +\"&csm_source=search",
+        "request": "https://bbs-api.miyoushe.com/post/api/getPostFull",
         "method": "get",
         "param": [
           {
@@ -26,6 +26,18 @@
           {
             "name": "csm_source",
             "content": "search"
+          }
+        ]
+      }
+    },
+    "account": {
+      "access_device": {
+        "request": "https://public-data-api.mihoyo.com/device-fp/api/getFp",
+        "method": "post",
+        "body": [
+          {
+            "name": "device_id",
+            "content": ""
           }
         ]
       }
