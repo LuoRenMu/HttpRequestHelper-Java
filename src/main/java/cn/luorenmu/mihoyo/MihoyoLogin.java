@@ -2,13 +2,13 @@ package cn.luorenmu.mihoyo;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.luorenmu.common.utils.RSAUtil;
 import cn.luorenmu.common.utils.StringUtil;
 import cn.luorenmu.mihoyo.entiy.account.MihoyoDeviceFpRequest;
 import cn.luorenmu.mihoyo.entiy.account.MihoyoDeviceFpResponse;
 import com.alibaba.fastjson2.JSON;
 
 import java.util.Map;
-
 
 /**
  * @author LoMu
@@ -18,8 +18,8 @@ public class MihoyoLogin {
 
     public static void main(String[] args) throws Exception {
         MihoyoLogin mihoyoLogin = new MihoyoLogin();
-        //mihoyoLogin.mihoyoPasswordLogin(RSAUtil.encrypt("13260778819"),RSAUtil.encrypt("XG142536789"),mihoyoLogin.getDevice().getData().getDeviceFp());
-        mihoyoLogin.accessVerfication();
+        mihoyoLogin.mihoyoPasswordLogin(RSAUtil.encrypt("13260778819"), RSAUtil.encrypt("XG142536789"), mihoyoLogin.getDevice().getData().getDeviceFp());
+        /* mihoyoLogin.mobileVerification("13260778819","389411");*/
     }
 
     public void mihoyoPasswordLogin(String account, String password, String device) {
@@ -33,6 +33,18 @@ public class MihoyoLogin {
         HttpResponse execute = post.execute();
         System.out.println(execute.body());
         System.out.println(execute.headers());
+    }
+
+    public void sendMobileVerificationDevic() {
+        //HcFOVDUQ0TmvYwJlf9YCmnAGX362a9vV
+        HttpRequest post = HttpRequest.post("https://webapi.account.mihoyo.com/Api/create_mobile_captcha?action_type=login&mmt_key=" + "HcFOVDUQ0TmvYwJlf9YCmnAGX362a9vV" + "&mobile=13260778819&t=" + System.currentTimeMillis() / 1000);
+        HttpResponse execute = post.execute();
+        System.out.println(execute);
+    }
+
+    public void mobileVerificationDevice(String mobile, String code) {
+        HttpRequest post = HttpRequest.post("https://webapi.account.mihoyo.com/Api/login_by_mobilecaptcha?mobile=" + mobile + "&mobile_captcha=" + code + "&source=user.mihoyo.com&t=" + System.currentTimeMillis() / 1000);
+        System.out.println(post.execute());
     }
 
     public String accessVerfication() {
