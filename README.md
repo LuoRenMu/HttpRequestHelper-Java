@@ -1,6 +1,6 @@
 # MultifunctionalAutoHelper-Java
 用于个人服务器的自动化工具   
-接入Serverchan/e-email   
+接入Serverchan/e-mail   
 目标是高度可定制化    
 正在全力开发中！  
 前期大部分都为硬代码 后续将逐步完善
