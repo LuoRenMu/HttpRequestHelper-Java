@@ -1,8 +1,10 @@
 # MultifunctionalAutoHelper-Java
 用于个人服务器的自动化工具   
+接入Serverchan/e-email   
 目标是高度可定制化    
 正在全力开发中！  
 前期大部分都为硬代码 后续将逐步完善
+
 
 ## 获取Cookie/SToken
 下载[Fiddler Classi](https://www.telerik.com/fiddle) 抓包获取
