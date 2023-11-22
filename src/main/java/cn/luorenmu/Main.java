@@ -10,7 +10,6 @@ import cn.luorenmu.task.MiHoYoSign;
 public class Main {
 
     public static void main(String[] args) {
-
         MiHoYoSign miHoYoSingIn = new MiHoYoSign();
         miHoYoSingIn.signTimerTask();
     }

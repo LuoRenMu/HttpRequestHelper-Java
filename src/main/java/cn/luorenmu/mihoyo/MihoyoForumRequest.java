@@ -61,7 +61,7 @@ public class MihoyoForumRequest {
         return null;
     }
 
-    public static String getDS() {
+    protected static String getDS() {
         String i = (System.currentTimeMillis() / 1000) + "";
         String r = StringUtil.getRandomStr(6);
         return createDS("uTUzziiV9FazyGA7XgVIk287ZczinFRV", i, r);
@@ -77,7 +77,7 @@ public class MihoyoForumRequest {
      * @param r random String
      * @return String
      */
-    public static String createDS(String n, String i, String r) {
+    private static String createDS(String n, String i, String r) {
         String c = DigestUtils.md5Hex("salt=" + n + "&t=" + i + "&r=" + r);
         return String.format("%s,%s,%s", i, r, c);
     }

@@ -2,7 +2,7 @@
   "mihoyo": {
     "forum": {
       "article_collect": {
-        "request": "https://bbs-api.miyoushe.com/collection/api/collection/getCollectionPostList",
+        "url": "https://bbs-api.miyoushe.com/collection/api/collection/getCollectionPostList",
         "method": "get",
         "param": [
           {
@@ -16,7 +16,7 @@
         ]
       },
       "article": {
-        "request": "https://bbs-api.miyoushe.com/post/api/getPostFull",
+        "url": "https://bbs-api.miyoushe.com/post/api/getPostFull",
         "method": "get",
         "param": [
           {
@@ -32,15 +32,18 @@
     },
     "account": {
       "access_device": {
-        "request": "https://public-data-api.mihoyo.com/device-fp/api/getFp",
+        "url": "https://public-data-api.mihoyo.com/device-fp/api/getFp",
         "method": "post",
-        "body": [
+        "param": [
           {
             "name": "device_id",
             "content": ""
           }
         ]
       }
+    },
+    "request_pass": {
+      "rs_public_key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDvekdPMHN3AYhm/vktJT+YJr7\n               cI5DcsNKqdsx5DZX0gDuWFuIjzdwButrIYPNmRJ1G8ybDIF7oDW2eEpm5sMbL9zs\n               9ExXCdvqrn51qELbqj0XxtMTIpaCHFSI50PfPpTFV9Xt/hmyVwokoOXFlAEgCn+Q\n               CgGs52bFoYMtyi+xEQIDAQAB"
     }
   }
 }

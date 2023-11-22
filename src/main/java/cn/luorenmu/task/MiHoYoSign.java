@@ -1,6 +1,6 @@
 package cn.luorenmu.task;
 
-import cn.luorenmu.common.utils.ScanUtil;
+import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.entiy.Config;
 import cn.luorenmu.mihoyo.MihoyoAccountRequest;
 import cn.luorenmu.mihoyo.entiy.Games;
@@ -9,8 +9,6 @@ import cn.luorenmu.mihoyo.entiy.account.MihoyoUserTokenResponse;
 import cn.luorenmu.mihoyo.entiy.account.SignInUser;
 import cn.luorenmu.notification.ServerChanNotification;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -26,43 +24,30 @@ import static cn.luorenmu.mihoyo.MihoyoAccountRequest.setSignMiHoyoForm;
  */
 public class MiHoYoSign {
 
-    private final MihoyoAccountRequest mihoyoAccountService = new MihoyoAccountRequest();
+    private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(1);
 
 
     public void signTimerTask() {
         List<SignInUser> userList = new ArrayList<>();
-        String cookieStr = ScanUtil.CONFIG.getCookie();
-        Config.SToken sToken = ScanUtil.CONFIG.getSToken();
-        MihoyoUserTokenResponse cookieAccountInfoBySToken = mihoyoAccountService.getCookieAccountInfoBySToken(sToken.getSTokenStr());
+        String cookieStr = FileManager.CONFIG.getCookie();
+        Config.SToken sToken = FileManager.CONFIG.getSToken();
+        MihoyoUserTokenResponse cookieAccountInfoBySToken = MihoyoAccountRequest.getCookieAccountInfoBySToken(sToken.getSTokenStr());
         System.out.println(cookieAccountInfoBySToken);
         MihoyoUserTokenResponse.UserTokenData data = cookieAccountInfoBySToken.getData();
         userList.add(new SignInUser().setCookie(cookieStr).setGames(Games.STAR_RAIL).setUid(data.getUid()));
 
-        ScheduledExecutorService threadPool = Executors.newScheduledThreadPool(1);
 
-        LocalDateTime now = LocalDateTime.now();
-        //设置时间
-        LocalDateTime time = now.withHour(10).withMinute(0).withSecond(0).withNano(0);
-        //如果现在时间在指定日期之后则添加七天
-        if (now.isAfter(time)) {
-            time = time.plusDays(1);
-        }
-        //获取两个时间之间的差值
-        long initailDelay = Duration.between(now, time).toMinutes();
-        long period = 1000 * 60 * 60 * 24;
-
-        threadPool.scheduleAtFixedRate(() -> {
+        SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(() -> {
             for (SignInUser user : userList) {
-                SignInfoRespone signInInfoRespone = mihoyoAccountService.getSignInfoRespone(user);
+                SignInfoRespone signInInfoRespone = MihoyoAccountRequest.getSignInfoRespone(user);
                 if (signInInfoRespone.getData().isSign()) {
                     ServerChanNotification.sendMessageTitle("今天的签到已经完成");
                     return;
                 }
-                String message = mihoyoAccountService.signOperate(user, setSignMiHoyoForm(user.getUid(), Games.STAR_RAIL));
+                String message = MihoyoAccountRequest.signOperate(user, setSignMiHoyoForm(user.getUid(), Games.STAR_RAIL));
                 ServerChanNotification.sendMessageTitle(message);
-
             }
-        }, initailDelay, period, TimeUnit.MINUTES);
+        }, 0, 24, TimeUnit.HOURS);
     }
 
 

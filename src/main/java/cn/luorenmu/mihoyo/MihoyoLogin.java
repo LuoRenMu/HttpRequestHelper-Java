@@ -17,12 +17,11 @@ import java.util.Map;
 public class MihoyoLogin {
 
     public static void main(String[] args) throws Exception {
-        MihoyoLogin mihoyoLogin = new MihoyoLogin();
-        mihoyoLogin.mihoyoPasswordLogin(RSAUtil.encrypt("13260778819"), RSAUtil.encrypt("XG142536789"), mihoyoLogin.getDevice().getData().getDeviceFp());
+        mihoyoPasswordLogin(RSAUtil.encrypt("13260778819"), RSAUtil.encrypt("XG142536789"), getDevice().getData().getDeviceFp());
         /* mihoyoLogin.mobileVerification("13260778819","389411");*/
     }
 
-    public void mihoyoPasswordLogin(String account, String password, String device) {
+    public static void mihoyoPasswordLogin(String account, String password, String device) {
         HttpRequest post = HttpRequest.post("https://passport-api.mihoyo.com/account/ma-cn-passport/app/loginByPassword");
         post.body(JSON.toJSONString(Map.of("account", account, "password", password)));
         post.header("x-rpc-device_fp", device);
@@ -35,25 +34,25 @@ public class MihoyoLogin {
         System.out.println(execute.headers());
     }
 
-    public void sendMobileVerificationDevic() {
+    public static void sendMobileDeviceVerification() {
         //HcFOVDUQ0TmvYwJlf9YCmnAGX362a9vV
         HttpRequest post = HttpRequest.post("https://webapi.account.mihoyo.com/Api/create_mobile_captcha?action_type=login&mmt_key=" + "HcFOVDUQ0TmvYwJlf9YCmnAGX362a9vV" + "&mobile=13260778819&t=" + System.currentTimeMillis() / 1000);
         HttpResponse execute = post.execute();
         System.out.println(execute);
     }
 
-    public void mobileVerificationDevice(String mobile, String code) {
+    public static void mobileDeviceVerification(String mobile, String code) {
         HttpRequest post = HttpRequest.post("https://webapi.account.mihoyo.com/Api/login_by_mobilecaptcha?mobile=" + mobile + "&mobile_captcha=" + code + "&source=user.mihoyo.com&t=" + System.currentTimeMillis() / 1000);
         System.out.println(post.execute());
     }
 
-    public String accessVerfication() {
+    public static String accessVerfication() {
         HttpRequest get = HttpRequest.get("https://webapi.account.mihoyo.com/Api/create_mmt?scene_type=1&now=" + System.currentTimeMillis() / 1000 + "&reason=user.mihoyo.com%2523%252Flogin%252Fcaptcha&action_type=login_by_mobile_captcha");
         System.out.println(get.execute().body());
         return null;
     }
 
-    public MihoyoDeviceFpResponse getDevice() {
+    public static MihoyoDeviceFpResponse getDevice() {
         HttpRequest post = HttpRequest.post("https://public-data-api.mihoyo.com/device-fp/api/getFp");
 
         MihoyoDeviceFpRequest mihoyoDeviceFpRequest = new MihoyoDeviceFpRequest();

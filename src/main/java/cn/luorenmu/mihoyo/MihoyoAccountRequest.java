@@ -43,7 +43,7 @@ public class MihoyoAccountRequest {
         return headers;
     }
 
-    public MihoyoUserTokenResponse getCookieAccountInfoBySToken(String sToken) {
+    public static MihoyoUserTokenResponse getCookieAccountInfoBySToken(String sToken) {
         HttpRequest httpRequest = HttpRequest.get("https://passport-api.mihoyo.com/account/auth/api/getCookieAccountInfoBySToken");
         httpRequest.addHeaders(setCookie(sToken));
         HttpResponse execute = httpRequest.execute();
@@ -51,44 +51,44 @@ public class MihoyoAccountRequest {
 
     }
 
-    public SignInfoRespone getSignInfoRespone(SignInUser signInUser) {
+    public static SignInfoRespone getSignInfoRespone(SignInUser signInUser) {
         HttpRequest httpRequest = HttpUtil.createGet(SIGN_INFO_URL + signInUser.getGames().getParam() + signInUser.getUidParam());
         Map<String, String> headers = setCookie(signInUser.getCookie());
         httpRequest.addHeaders(headers);
         return JSON.parseObject(httpRequest.execute().body(), SignInfoRespone.class);
     }
 
-    public SignRewardInfo getSignRewardInfo(Games game) {
+    public static SignRewardInfo getSignRewardInfo(Games game) {
         HttpRequest httpRequest = HttpUtil.createGet("https://api-takumi.mihoyo.com/event/luna/home?lang=zh-cn&act_id=" + game.getActId());
         return JSON.parseObject(httpRequest.execute().body(), SignRewardInfo.class);
     }
 
-    public String cookieToUid(String cookie) {
+    static String cookieToUid(String cookie) {
 
         return null;
     }
 
-    public MihoyoUserTicketResponse getActionTicketBySToken(String mihoyoUid) {
+    public static MihoyoUserTicketResponse getActionTicketBySToken(String mihoyoUid) {
         HttpRequest httpRequest = HttpRequest.get(String.format("https://api-takumi.miyoushe.com/auth/api/getActionTicketBySToken?uid=%s&action_type=game_role", mihoyoUid));
         String body = httpRequest.execute().body();
         return JSON.parseObject(body, MihoyoUserTicketResponse.class);
     }
 
-    public MihoyoUserGameInfoResponse getUserGameRoles(String ticket, Games games) {
+    public static MihoyoUserGameInfoResponse getUserGameRoles(String ticket, Games games) {
         HttpRequest httpRequest = HttpRequest.get(String.format("https://api-takumi.mihoyo.com/binding/api/getUserGameRoles?action_ticket=%s&game_biz=%s", ticket, games.getGameInfo().getGameBiz()));
         HttpResponse execute = httpRequest.execute();
         return JSON.parseObject(execute.body(), MihoyoUserGameInfoResponse.class);
 
     }
 
-    public SignRewardInfo.GameData.Award getToDaySignInfo(SignInUser signInUser, Games game) {
+    public static SignRewardInfo.GameData.Award getToDaySignInfo(SignInUser signInUser, Games game) {
         SignRewardInfo signInRewardInfo = getSignRewardInfo(game);
         List<SignRewardInfo.GameData.Award> awards = signInRewardInfo.getData().getAwards();
         int SignInDay = getSignInfoRespone(signInUser).getData().getShortSignDay();
         return awards.get(SignInDay - 1);
     }
 
-    public String signOperate(SignInUser user, Map<String, String> form) {
+    public static String signOperate(SignInUser user, Map<String, String> form) {
         HttpRequest post = HttpRequest.post(SIGN_URL);
         post.addHeaders(setCookie(user.getCookie()));
         post.formStr(form);
