@@ -4,10 +4,10 @@
       "article_collect": {
         "url": "https://bbs-api.miyoushe.com/collection/api/collection/getCollectionPostList",
         "method": "get",
-        "param": [
+        "params": [
           {
             "name": "collection_id",
-            "content": "{id}"
+            "content": "2058162"
           },
           {
             "name": "order_type",
@@ -18,7 +18,7 @@
       "article": {
         "url": "https://bbs-api.miyoushe.com/post/api/getPostFull",
         "method": "get",
-        "param": [
+        "params": [
           {
             "name": "post_id",
             "content": "{id}"
@@ -34,7 +34,7 @@
       "access_device": {
         "url": "https://public-data-api.mihoyo.com/device-fp/api/getFp",
         "method": "post",
-        "param": [
+        "params": [
           {
             "name": "device_id",
             "content": ""

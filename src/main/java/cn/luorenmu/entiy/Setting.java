@@ -1,7 +1,12 @@
 package cn.luorenmu.entiy;
 
+import cn.hutool.extra.mail.MailAccount;
 import cn.luorenmu.common.auto.Automatic;
+import com.alibaba.fastjson2.PropertyNamingStrategy;
+import com.alibaba.fastjson2.annotation.JSONType;
 import lombok.Data;
+
+import java.util.List;
 
 
 /**
@@ -11,12 +16,16 @@ import lombok.Data;
 
 
 @Data
-public class Config {
+public class Setting {
     private SToken sToken;
     private String serverChanKey;
     private String serverChanUrl;
     private String email;
     private String cookie;
+    private MihoyoSetting mihoyo;
+    private General general;
+
+
 
     public void setSToken(String sTokenStr) {
         sToken = new SToken();
@@ -32,6 +41,25 @@ public class Config {
             }
             return split;
         });
+    }
+
+    @Data
+    public static class General {
+        private MailAccount mail;
+    }
+
+
+    @Data
+    public static class MihoyoSetting {
+        private List<MihoyoSettingAccount> accounts;
+
+        @Data
+        @JSONType(naming = PropertyNamingStrategy.SnakeCase)
+        public static class MihoyoSettingAccount {
+            private String cookie;
+            private String serverChanKey;
+            private String email;
+        }
     }
 
     @Data

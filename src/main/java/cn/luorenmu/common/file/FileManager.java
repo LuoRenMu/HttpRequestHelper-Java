@@ -2,13 +2,14 @@ package cn.luorenmu.common.file;
 
 import cn.luorenmu.Main;
 import cn.luorenmu.common.utils.LoggerUtil;
-import cn.luorenmu.entiy.Config;
+import cn.luorenmu.entiy.Setting;
 
 import java.io.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -19,14 +20,32 @@ import java.util.Objects;
 
 public class FileManager {
 
-    public static final Config CONFIG = new Config();
-    public static final String PATH = scanPath();
-    public static final String FILE_ROOT_DIRECTORY = PATH.substring(0, PATH.lastIndexOf("target"));
+    public static final Setting CONFIG = new Setting();
+    public static final String RESOURCES_PATH;
+    public static final String PROJECT_PATH;
+    public static final String FILE_ROOT_DIRECTORY;
+    public static final String PACKAGE_PATH = "cn.luorenmu";
     public static final List<String> FILE_NAME = new ArrayList<>();
+    public static final Map<Class<?>, Object> CONFIG_ENITYS;
+
+    static {
+        String path = Objects.requireNonNull(Main.class.getClassLoader().getResource("cn/luorenmu/")).getFile();
+        if (path.contains("%")) {
+            PROJECT_PATH = URLDecoder.decode(path, StandardCharsets.UTF_8);
+        } else {
+            PROJECT_PATH = path;
+        }
+        System.out.println(PROJECT_PATH);
+        System.out.println(PACKAGE_PATH);
+        RESOURCES_PATH = PROJECT_PATH.substring(1, PROJECT_PATH.lastIndexOf("cn"));
+        FILE_ROOT_DIRECTORY = RESOURCES_PATH.substring(0, RESOURCES_PATH.lastIndexOf("target"));
+        fileGeneration(false);
+        CONFIG_ENITYS = ReadWriteFile.initConfig();
+    }
 
 
     public static void fileGeneration(boolean remake) {
-        String initFilePath = PATH + "/init";
+        String initFilePath = RESOURCES_PATH + "init";
         File initFile = new File(initFilePath);
         File[] files1 = initFile.listFiles();
         if (files1 != null) {
@@ -57,15 +76,5 @@ public class FileManager {
 
     }
 
-    private static String scanPath() {
-        String path = Objects.requireNonNull(Main.class.getClassLoader().getResource("cn/luorenmu")).getFile();
-        if (path.contains("%")) {
-            path = URLDecoder.decode(path, StandardCharsets.UTF_8);
-        }
-        return path.substring(1, path.lastIndexOf("cn"));
-    }
 
-    public static void main(String[] args) {
-        fileGeneration(false);
-    }
 }

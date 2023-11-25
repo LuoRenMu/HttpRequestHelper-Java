@@ -1,8 +1,9 @@
 {
   "mihoyo": {
-    "account": [
+    "accounts": [
       {
         "cookie": "",
+        "s_token": "",
         "server_chan_key": "",
         "email": ""
       }

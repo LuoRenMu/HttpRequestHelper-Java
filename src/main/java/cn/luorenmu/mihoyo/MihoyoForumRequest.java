@@ -2,7 +2,10 @@ package cn.luorenmu.mihoyo;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.luorenmu.common.convert.RequestContentConvert;
+import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.common.utils.StringUtil;
+import cn.luorenmu.entiy.Request;
 import cn.luorenmu.mihoyo.entiy.data.ForumArticle;
 import cn.luorenmu.mihoyo.entiy.data.ForumCollectList;
 import cn.luorenmu.notification.ServerChanNotification;
@@ -18,13 +21,12 @@ import java.util.regex.Pattern;
  * Date 2023.11.13 4:09
  */
 public class MihoyoForumRequest {
+    private final Request request = (Request) FileManager.CONFIG_ENITYS.get(Request.class);
 
-
-    private ForumCollectList getCollectionPostList() {
-        HttpRequest httpRequest = HttpRequest.get("https://bbs-api.miyoushe.com/collection/api/collection/getCollectionPostList?collection_id=2058162&order_type=2");
-        httpRequest.headerMap(Map.of("DS", getDS(), "x-rpc-client_type", " 2", "x-rpc-app_version", " 2.61.1"), true);
-        HttpResponse execute = httpRequest.execute();
-        return JSON.parseObject(execute.body(), ForumCollectList.class);
+    public static void main(String[] args) {
+        FileManager.fileGeneration(true);
+        MihoyoForumRequest mihoyoForumRequest = new MihoyoForumRequest();
+        System.out.println(mihoyoForumRequest.getCollectionPostList());
     }
 
     private ForumArticle getFourmArticle(String postId) {
@@ -80,5 +82,13 @@ public class MihoyoForumRequest {
     private static String createDS(String n, String i, String r) {
         String c = DigestUtils.md5Hex("salt=" + n + "&t=" + i + "&r=" + r);
         return String.format("%s,%s,%s", i, r, c);
+    }
+
+    private ForumCollectList getCollectionPostList() {
+
+        HttpRequest httpRequest = HttpRequest.get(RequestContentConvert.requestToGet(request.getMihoyo().getForum().getArticleCollect()));
+        httpRequest.headerMap(Map.of("DS", getDS(), "x-rpc-client_type", " 2", "x-rpc-app_version", " 2.61.1"), true);
+        HttpResponse execute = httpRequest.execute();
+        return JSON.parseObject(execute.body(), ForumCollectList.class);
     }
 }
