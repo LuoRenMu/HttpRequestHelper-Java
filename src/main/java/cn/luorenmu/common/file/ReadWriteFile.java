@@ -1,5 +1,6 @@
 package cn.luorenmu.common.file;
 
+import cn.luorenmu.common.utils.LoggerUtil;
 import com.alibaba.fastjson2.JSON;
 
 import java.io.BufferedReader;
@@ -17,24 +18,26 @@ public class ReadWriteFile {
 
     public static Map<Class<?>, Object> initConfig() {
         Map<Class<?>, Object> config = new HashMap<>();
-        for (String s : FileManager.FILE_NAME) {
-            String fileName = String.valueOf(s.charAt(0)).toUpperCase() + s.substring(0, s.lastIndexOf(".")).substring(1);
-            String json = readRootFileJson(s);
-            String packagePath = FileManager.PACKAGE_PATH + ".entiy.";
+        for (String s : FileManager.FILES_NAME) {
             try {
+                String fileName = String.valueOf(s.charAt(0)).toUpperCase() + s.substring(0, s.lastIndexOf(".")).substring(1);
+                String json = readRootFileJson(s);
+                String packagePath = FileManager.PACKAGE_PATH + ".entiy.";
+
                 Class<?> aClass = Class.forName(packagePath + fileName);
                 Object o = JSON.parseObject(json, aClass);
                 config.put(aClass, o);
-            } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException | StringIndexOutOfBoundsException e) {
+                LoggerUtil.log.warning("file -> " + s + " <- init failed");
                 throw new RuntimeException(e);
             }
-
         }
+        LoggerUtil.log.info("文件解析已完成");
         return config;
     }
 
     public static String readRootFileJson(String filename) {
-        String fileRootDirectory = FileManager.FILE_ROOT_DIRECTORY;
+        String fileRootDirectory = FileManager.FILE_PATH;
         StringBuilder sb = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileRootDirectory + filename))) {
             String s;

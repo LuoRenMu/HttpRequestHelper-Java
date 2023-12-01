@@ -13,6 +13,7 @@ import com.alibaba.fastjson2.JSON;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,13 +22,9 @@ import java.util.regex.Pattern;
  * Date 2023.11.13 4:09
  */
 public class MihoyoForumRequest {
-    private final Request request = (Request) FileManager.CONFIG_ENITYS.get(Request.class);
+    private static final Request request = (Request) FileManager.CONFIG_ENITYS.get(Request.class);
+    private static String cache;
 
-    public static void main(String[] args) {
-        FileManager.fileGeneration(true);
-        MihoyoForumRequest mihoyoForumRequest = new MihoyoForumRequest();
-        System.out.println(mihoyoForumRequest.getCollectionPostList());
-    }
 
     private ForumArticle getFourmArticle(String postId) {
         HttpRequest httpRequest = HttpRequest.get("https://bbs-api.miyoushe.com/post/api/getPostFull?post_id=" + postId + "&csm_source=search");
@@ -37,17 +34,19 @@ public class MihoyoForumRequest {
         return JSON.parseObject(execute.body(), ForumArticle.class);
     }
 
-    public boolean isRecentArticle() {
+    public void isRecentArticle() {
         ForumCollectList.ForumArticleSimple forumArticleSimple = getCollectionPostList().getData().getList().get(0);
         long createdAt = forumArticleSimple.getCreatedAt();
         long differTime = System.currentTimeMillis() / 1000 - createdAt;
+        System.out.println("暂无新兑换码");
         if (differTime <= 60 * 60 * 10) {
             ForumArticle forumArticle = getFourmArticle(forumArticleSimple.getPostId());
             String redeemCodes = getRedeemCodes(forumArticle.getData().getPost().getPost().getContent());
-            ServerChanNotification.sendMessageTitle("新版本兑换码已发放:" + redeemCodes);
+            if (!Objects.equals(cache, redeemCodes)) {
+                cache = redeemCodes;
+                ServerChanNotification.sendMessageTitle("新版本兑换码已发放:" + redeemCodes);
+            }
         }
-
-        return false;
     }
 
     private String getRedeemCodes(String content) {
@@ -85,7 +84,6 @@ public class MihoyoForumRequest {
     }
 
     private ForumCollectList getCollectionPostList() {
-
         HttpRequest httpRequest = HttpRequest.get(RequestContentConvert.requestToGet(request.getMihoyo().getForum().getArticleCollect()));
         httpRequest.headerMap(Map.of("DS", getDS(), "x-rpc-client_type", " 2", "x-rpc-app_version", " 2.61.1"), true);
         HttpResponse execute = httpRequest.execute();

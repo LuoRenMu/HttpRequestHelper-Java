@@ -3,6 +3,7 @@ package cn.luorenmu.task;
 import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.entiy.Setting;
 import cn.luorenmu.mihoyo.MihoyoAccountRequest;
+import cn.luorenmu.mihoyo.MihoyoForumRequest;
 import cn.luorenmu.mihoyo.entiy.Games;
 import cn.luorenmu.mihoyo.entiy.SignInfoRespone;
 import cn.luorenmu.mihoyo.entiy.account.MihoyoUserTokenResponse;
@@ -24,7 +25,7 @@ import static cn.luorenmu.mihoyo.MihoyoAccountRequest.setSignMiHoyoForm;
  */
 public class MiHoYoSign {
 
-    private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(1);
+    private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(2);
 
 
     public void signTimerTask() {
@@ -50,6 +51,10 @@ public class MiHoYoSign {
         }, 0, 24, TimeUnit.HOURS);
     }
 
+    public void isRecentArticleTask() {
+        MihoyoForumRequest mihoyoForumRequest = new MihoyoForumRequest();
+        SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(mihoyoForumRequest::isRecentArticle, 0, 1, TimeUnit.HOURS);
+    }
 
 
 
