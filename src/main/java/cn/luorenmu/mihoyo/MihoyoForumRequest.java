@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * Date 2023.11.13 4:09
  */
 public class MihoyoForumRequest {
-    private static final Request request = (Request) FileManager.CONFIG_ENITYS.get(Request.class);
+    private static final Request request = FileManager.getConfig(Request.class);
     private static String cache;
 
 

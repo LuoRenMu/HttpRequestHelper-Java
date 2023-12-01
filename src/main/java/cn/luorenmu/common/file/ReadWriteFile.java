@@ -3,11 +3,12 @@ package cn.luorenmu.common.file;
 import cn.luorenmu.common.utils.LoggerUtil;
 import com.alibaba.fastjson2.JSON;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+
+import static cn.luorenmu.common.file.FileManager.FILES_NAME;
+import static cn.luorenmu.common.file.FileManager.FILE_PATH;
 
 /**
  * @author LoMu
@@ -18,17 +19,16 @@ public class ReadWriteFile {
 
     public static Map<Class<?>, Object> initConfig() {
         Map<Class<?>, Object> config = new HashMap<>();
-        for (String s : FileManager.FILES_NAME) {
+        for (String s : FILES_NAME) {
             try {
                 String fileName = String.valueOf(s.charAt(0)).toUpperCase() + s.substring(0, s.lastIndexOf(".")).substring(1);
                 String json = readRootFileJson(s);
                 String packagePath = FileManager.PACKAGE_PATH + ".entiy.";
-
                 Class<?> aClass = Class.forName(packagePath + fileName);
                 Object o = JSON.parseObject(json, aClass);
                 config.put(aClass, o);
             } catch (ClassNotFoundException | StringIndexOutOfBoundsException e) {
-                LoggerUtil.log.warning("file -> " + s + " <- init failed");
+                LoggerUtil.log.warning("文件解析失败 \nfile -> " + s + " <- init failed");
                 throw new RuntimeException(e);
             }
         }
@@ -37,9 +37,12 @@ public class ReadWriteFile {
     }
 
     public static String readRootFileJson(String filename) {
-        String fileRootDirectory = FileManager.FILE_PATH;
+        String path = FILE_PATH + filename;
+        if (!isExists(path)) {
+            fileGeneration(false);
+        }
         StringBuilder sb = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(fileRootDirectory + filename))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
             String s;
             while ((s = bufferedReader.readLine()) != null) {
                 sb.append(s).append(System.lineSeparator());
@@ -50,4 +53,38 @@ public class ReadWriteFile {
         return sb.toString();
     }
 
+    private static boolean isExists(String path) {
+        File file = new File(path);
+        return file.exists();
+    }
+
+
+    private static void getFileStreamThenCreate(String fileName, String outputPath) {
+        InputStream resourceAsStream = FileManager.class.getResourceAsStream("/init/" + fileName);
+        try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(outputPath))) {
+            byte[] bytes = new byte[1024];
+            int len;
+            while (true) {
+                assert resourceAsStream != null;
+                if ((len = resourceAsStream.read(bytes)) == -1) break;
+                bufferedOutputStream.write(bytes, 0, len);
+                bufferedOutputStream.flush();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    public static void fileGeneration(boolean remake) {
+        for (String fileName : FILES_NAME) {
+            String outputFilePath = FILE_PATH + fileName;
+            File file = new File(outputFilePath);
+            if (!file.exists() || remake) {
+                getFileStreamThenCreate(fileName, outputFilePath);
+            }
+        }
+        LoggerUtil.log.info("文件初始化完成");
+
+    }
 }

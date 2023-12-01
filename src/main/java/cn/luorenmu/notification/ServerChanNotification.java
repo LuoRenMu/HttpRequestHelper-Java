@@ -5,6 +5,7 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.common.utils.LoggerUtil;
+import cn.luorenmu.entiy.Setting;
 
 
 /**
@@ -12,7 +13,7 @@ import cn.luorenmu.common.utils.LoggerUtil;
  * Date 2023.10.28 18:57
  */
 public class ServerChanNotification {
-    private final static String URL = FileManager.CONFIG.getServerChanUrl() + FileManager.CONFIG.getServerChanKey() + ".send?";
+    private final static String URL = FileManager.getConfig(Setting.class).getServerChanUrl() + FileManager.getConfig(Setting.class).getServerChanKey() + ".send?";
 
 
     public static void sendMessageTitle(String title) {
