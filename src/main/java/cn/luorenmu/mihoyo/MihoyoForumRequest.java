@@ -10,6 +10,7 @@ import cn.luorenmu.mihoyo.entiy.data.ForumArticle;
 import cn.luorenmu.mihoyo.entiy.data.ForumCollectList;
 import cn.luorenmu.notification.ServerChanNotification;
 import com.alibaba.fastjson2.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.util.Map;
@@ -21,6 +22,8 @@ import java.util.regex.Pattern;
  * @author LoMu
  * Date 2023.11.13 4:09
  */
+
+@Slf4j
 public class MihoyoForumRequest {
     private static final Request request = FileManager.getConfig(Request.class);
     private static String cache;
@@ -30,7 +33,6 @@ public class MihoyoForumRequest {
         HttpRequest httpRequest = HttpRequest.get("https://bbs-api.miyoushe.com/post/api/getPostFull?post_id=" + postId + "&csm_source=search");
         httpRequest.headerMap(Map.of("DS", getDS(), "x-rpc-client_type", " 2", "x-rpc-app_version", " 2.61.1", "Referer", " https://app.mihoyo.com"), true);
         HttpResponse execute = httpRequest.execute();
-        System.out.println(execute.body());
         return JSON.parseObject(execute.body(), ForumArticle.class);
     }
 
@@ -38,13 +40,14 @@ public class MihoyoForumRequest {
         ForumCollectList.ForumArticleSimple forumArticleSimple = getCollectionPostList().getData().getList().get(0);
         long createdAt = forumArticleSimple.getCreatedAt();
         long differTime = System.currentTimeMillis() / 1000 - createdAt;
-        System.out.println("暂无新兑换码");
+        log.info("暂无新兑换码");
         if (differTime <= 60 * 60 * 10) {
             ForumArticle forumArticle = getFourmArticle(forumArticleSimple.getPostId());
             String redeemCodes = getRedeemCodes(forumArticle.getData().getPost().getPost().getContent());
             if (!Objects.equals(cache, redeemCodes)) {
                 cache = redeemCodes;
-                ServerChanNotification.sendMessageTitle("新版本兑换码已发放:" + redeemCodes);
+                log.info("兑换码 : {}", redeemCodes);
+                ServerChanNotification.sendTitleAndMessage("新版本兑换码已发放", redeemCodes);
             }
         }
     }

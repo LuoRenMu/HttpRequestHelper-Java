@@ -17,7 +17,7 @@ import java.util.Map;
 public class MihoyoLogin {
 
     public static void main(String[] args) throws Exception {
-        mihoyoPasswordLogin(RSAUtil.encrypt("13260778819"), RSAUtil.encrypt("XG142536789"), getDevice().getData().getDeviceFp());
+        mihoyoPasswordLogin(RSAUtil.encrypt(""), RSAUtil.encrypt(""), getDevice().getData().getDeviceFp());
         /* mihoyoLogin.mobileVerification("13260778819","389411");*/
     }
 

@@ -1,5 +1,7 @@
 package cn.luorenmu.common.auto;
 
+import cn.luorenmu.common.utils.StringUtil;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,9 +19,7 @@ public class Automatic {
         for (Field field : fields) {
             if (field.getName().equals(fieldName)) {
                 try {
-                    String fristStr = String.valueOf(fieldName.charAt(0)).toUpperCase();
-                    String behindStr = fieldName.substring(1);
-                    String methodName = "set" + fristStr + behindStr;
+                    String methodName = "set" + StringUtil.firstCharacterUpperCase(fieldName);
                     Method method = classo.getMethod(methodName, classa);
                     method.invoke(object, args);
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -40,9 +40,7 @@ public class Automatic {
                 if (s.contains(fieldName)) {
                     try {
                         String param = s.substring(s.indexOf("=") + 1);
-                        String fristStr = String.valueOf(fieldName.charAt(0)).toUpperCase();
-                        String behindStr = fieldName.substring(1);
-                        String methodName = "set" + fristStr + behindStr;
+                        String methodName = "set" + StringUtil.firstCharacterUpperCase(fieldName);
                         Method method = classo.getMethod(methodName, classa);
                         method.invoke(object, param);
                     } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

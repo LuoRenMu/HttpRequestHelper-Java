@@ -23,12 +23,12 @@ public class Request {
     @Data
     @JSONType(naming = PropertyNamingStrategy.SnakeCase)
     public static class RequestData {
-        private RequestContent articleCollect;
-        private RequestContent article;
+        private RequestDetailed articleCollect;
+        private RequestDetailed article;
     }
 
     @Data
-    public static class RequestContent {
+    public static class RequestDetailed {
         private String url;
         private String method;
         private List<RequestParam> params = new ArrayList<>();

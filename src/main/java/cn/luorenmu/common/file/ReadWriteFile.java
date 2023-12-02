@@ -1,7 +1,8 @@
 package cn.luorenmu.common.file;
 
-import cn.luorenmu.common.utils.LoggerUtil;
+import cn.luorenmu.common.utils.StringUtil;
 import com.alibaba.fastjson2.JSON;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import static cn.luorenmu.common.file.FileManager.FILE_PATH;
  * @author LoMu
  * Date 2023.11.22 23:03
  */
+@Slf4j
 public class ReadWriteFile {
 
 
@@ -21,23 +23,25 @@ public class ReadWriteFile {
         Map<Class<?>, Object> config = new HashMap<>();
         for (String s : FILES_NAME) {
             try {
-                String fileName = String.valueOf(s.charAt(0)).toUpperCase() + s.substring(0, s.lastIndexOf(".")).substring(1);
+                String fileName = StringUtil.firstCharacterUpperCase(s.substring(0, s.lastIndexOf(".")));
                 String json = readRootFileJson(s);
                 String packagePath = FileManager.PACKAGE_PATH + ".entiy.";
                 Class<?> aClass = Class.forName(packagePath + fileName);
                 Object o = JSON.parseObject(json, aClass);
                 config.put(aClass, o);
             } catch (ClassNotFoundException | StringIndexOutOfBoundsException e) {
-                LoggerUtil.log.warning("文件解析失败 \nfile -> " + s + " <- init failed");
+
+                log.error("文件解析失败 \nfile -> " + s + " <- init failed");
                 throw new RuntimeException(e);
             }
         }
-        LoggerUtil.log.info("文件解析已完成");
+        log.info("文件解析已完成");
         return config;
     }
 
     public static String readRootFileJson(String filename) {
         String path = FILE_PATH + filename;
+        log.debug("read file path : {}", path);
         if (!isExists(path)) {
             fileGeneration(false);
         }
@@ -84,7 +88,7 @@ public class ReadWriteFile {
                 getFileStreamThenCreate(fileName, outputFilePath);
             }
         }
-        LoggerUtil.log.info("文件初始化完成");
+        log.info("文件初始化完成");
 
     }
 }

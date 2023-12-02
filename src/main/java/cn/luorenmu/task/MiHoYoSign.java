@@ -30,8 +30,8 @@ public class MiHoYoSign {
 
     public void signTimerTask() {
         List<SignInUser> userList = new ArrayList<>();
-        String cookieStr = FileManager.getConfig(Setting.class).getCookie();
-        Setting.SToken sToken = FileManager.getConfig(Setting.class).getSToken();
+        String cookieStr = FileManager.getConfig(Setting.class).getMihoyo().getAccounts().get(0).getCookie();
+        Setting.SToken sToken = FileManager.getConfig(Setting.class).getMihoyo().getAccounts().get(0).getSToken();
         MihoyoUserTokenResponse cookieAccountInfoBySToken = MihoyoAccountRequest.getCookieAccountInfoBySToken(sToken.getSTokenStr());
         System.out.println(cookieAccountInfoBySToken);
         MihoyoUserTokenResponse.UserTokenData data = cookieAccountInfoBySToken.getData();
@@ -42,11 +42,11 @@ public class MiHoYoSign {
             for (SignInUser user : userList) {
                 SignInfoRespone signInInfoRespone = MihoyoAccountRequest.getSignInfoRespone(user);
                 if (signInInfoRespone.getData().isSign()) {
-                    ServerChanNotification.sendMessageTitle("今天的签到已经完成");
+                    ServerChanNotification.sendTitle("今天的签到已经完成");
                     return;
                 }
                 String message = MihoyoAccountRequest.signOperate(user, setSignMiHoyoForm(user.getUid(), Games.STAR_RAIL));
-                ServerChanNotification.sendMessageTitle(message);
+                ServerChanNotification.sendTitle(message);
             }
         }, 0, 24, TimeUnit.HOURS);
     }

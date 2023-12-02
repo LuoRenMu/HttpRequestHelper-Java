@@ -8,7 +8,13 @@ import cn.luorenmu.entiy.Request;
  */
 public class RequestContentConvert {
 
-    public static String requestToGet(Request.RequestContent requestContent) {
+
+    public static String requestToPost() {
+
+        return null;
+    }
+
+    public static String requestToGet(Request.RequestDetailed requestContent) {
         if (requestContent.getMethod().equalsIgnoreCase("get")) {
             StringBuilder url = new StringBuilder(requestContent.getUrl());
             url.append("?");

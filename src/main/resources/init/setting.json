@@ -4,8 +4,10 @@
       {
         "cookie": "",
         "s_token": "",
-        "server_chan_key": "",
-        "email": ""
+        "server_chan_key": "5x",
+        "email": "",
+        "account": "138819",
+        "password": ""
       }
     ]
   },
@@ -18,6 +20,7 @@
       "pass": "",
       "starttls": true,
       "ssl": false
-    }
+    },
+    "server_chan_url": "https://sctapi.ftqq.com/"
   }
 }

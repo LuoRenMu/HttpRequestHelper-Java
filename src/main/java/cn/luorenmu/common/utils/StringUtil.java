@@ -23,4 +23,9 @@ public class StringUtil {
         }
         return sb.toString();
     }
+
+    public static String firstCharacterUpperCase(String str) {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
 }

@@ -3,7 +3,6 @@ package cn.luorenmu.mihoyo;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
-import cn.luorenmu.common.utils.LoggerUtil;
 import cn.luorenmu.mihoyo.entiy.Games;
 import cn.luorenmu.mihoyo.entiy.SignInfoRespone;
 import cn.luorenmu.mihoyo.entiy.SignRespone;
@@ -13,6 +12,7 @@ import cn.luorenmu.mihoyo.entiy.account.MihoyoUserTicketResponse;
 import cn.luorenmu.mihoyo.entiy.account.MihoyoUserTokenResponse;
 import cn.luorenmu.mihoyo.entiy.account.SignInUser;
 import com.alibaba.fastjson2.JSON;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +22,7 @@ import java.util.Map;
  * @author LoMu
  * Date 2023.11.06 17:13
  */
+@Slf4j
 public class MihoyoAccountRequest {
 
     private final static String SIGN_INFO_URL = "https://api-takumi.mihoyo.com/event/luna/info?lang=zh-cn";
@@ -95,7 +96,7 @@ public class MihoyoAccountRequest {
         String body = post.execute().body();
         SignRespone signRespone = JSON.parseObject(body, SignRespone.class);
         if (signRespone.getData().getGt().isEmpty()) {
-            LoggerUtil.log.info(signRespone.toString());
+            log.info(signRespone.toString());
             return "签到完成";
         }
 
