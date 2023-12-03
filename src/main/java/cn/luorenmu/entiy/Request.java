@@ -32,6 +32,8 @@ public class Request {
         private String url;
         private String method;
         private List<RequestParam> params = new ArrayList<>();
+        private List<RequestParam> body = new ArrayList<>();
+        private List<RequestParam> headers = new ArrayList<>();
     }
 
     @Data

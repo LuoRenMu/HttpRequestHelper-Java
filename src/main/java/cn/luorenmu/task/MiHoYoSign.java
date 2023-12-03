@@ -9,6 +9,7 @@ import cn.luorenmu.mihoyo.entiy.SignInfoRespone;
 import cn.luorenmu.mihoyo.entiy.account.MihoyoUserTokenResponse;
 import cn.luorenmu.mihoyo.entiy.account.SignInUser;
 import cn.luorenmu.notification.ServerChanNotification;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ import static cn.luorenmu.mihoyo.MihoyoAccountRequest.setSignMiHoyoForm;
  * @author LoMu
  * Date 2023.10.28 18:47
  */
+
+@Slf4j
 public class MiHoYoSign {
 
     private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(2);
@@ -53,7 +56,14 @@ public class MiHoYoSign {
 
     public void isRecentArticleTask() {
         MihoyoForumRequest mihoyoForumRequest = new MihoyoForumRequest();
-        SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(mihoyoForumRequest::isRecentArticle, 0, 1, TimeUnit.HOURS);
+        SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(() -> {
+            try {
+                mihoyoForumRequest.isRecentArticle();
+            } catch (Exception e) {
+                log.error("发生错误 : {}", e.toString());
+            }
+
+        }, 0, 1, TimeUnit.HOURS);
     }
 
 

@@ -34,12 +34,19 @@
       "access_device": {
         "url": "https://public-data-api.mihoyo.com/device-fp/api/getFp",
         "method": "post",
-        "params": [
+        "body": [
           {
             "name": "device_id",
             "content": ""
           }
         ]
+      },
+      "game_role": {
+        "url": "https://api-takumi.mihoyo.com/binding/api/getUserGameRoles",
+        "method": "get",
+        "params": [
+        ]
+
       }
     },
     "request_pass": {
