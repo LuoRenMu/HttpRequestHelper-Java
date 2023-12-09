@@ -1,6 +1,6 @@
 package cn.luorenmu.common.auto;
 
-import cn.luorenmu.common.utils.StringUtil;
+import cn.luorenmu.common.utils.StringUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -19,7 +19,7 @@ public class Automatic {
         for (Field field : fields) {
             if (field.getName().equals(fieldName)) {
                 try {
-                    String methodName = "set" + StringUtil.firstCharacterUpperCase(fieldName);
+                    String methodName = "set" + StringUtils.firstCharacterUpperCase(fieldName);
                     Method method = classo.getMethod(methodName, classa);
                     method.invoke(object, args);
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -29,6 +29,13 @@ public class Automatic {
         }
     }
 
+    /**
+     * @param object   类对象
+     * @param classo   参数类
+     * @param args     参数
+     * @param classa   方法参数类
+     * @param function 参数分隔
+     */
     public static void AutoSetFieldFunctionContains(Object object, Class<?> classo, String args, Class<?> classa, Function<String, String[]> function) {
         Field[] fields = classo.getDeclaredFields();
         String[] split = function.apply(args);
@@ -40,7 +47,7 @@ public class Automatic {
                 if (s.contains(fieldName)) {
                     try {
                         String param = s.substring(s.indexOf("=") + 1);
-                        String methodName = "set" + StringUtil.firstCharacterUpperCase(fieldName);
+                        String methodName = "set" + StringUtils.firstCharacterUpperCase(fieldName);
                         Method method = classo.getMethod(methodName, classa);
                         method.invoke(object, param);
                     } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

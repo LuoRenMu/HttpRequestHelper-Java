@@ -8,7 +8,7 @@ import java.security.SecureRandom;
  * @author LoMu
  * Date 2023.11.19 11:41
  */
-public class StringUtil {
+public class StringUtils {
     /**
      * 获取随机字符串用于DS算法中
      *
@@ -26,13 +26,21 @@ public class StringUtil {
         return sb.toString();
     }
 
+    /**
+     * 第一个字符大写
+     *
+     * @param str 字符
+     * @return String
+     */
+
     public static String firstCharacterUpperCase(String str) {
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
+        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
+
 
     public static String getDS() {
         String i = (System.currentTimeMillis() / 1000) + "";
-        String r = StringUtil.getRandomStr(6);
+        String r = StringUtils.getRandomStr(6);
         return createDS("uTUzziiV9FazyGA7XgVIk287ZczinFRV", i, r);
     }
 

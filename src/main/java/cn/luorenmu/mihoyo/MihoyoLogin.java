@@ -2,8 +2,8 @@ package cn.luorenmu.mihoyo;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
-import cn.luorenmu.common.utils.RSAUtil;
-import cn.luorenmu.common.utils.StringUtil;
+import cn.luorenmu.common.utils.RSAUtils;
+import cn.luorenmu.common.utils.StringUtils;
 import cn.luorenmu.mihoyo.entiy.account.MihoyoDeviceFpRequest;
 import cn.luorenmu.mihoyo.entiy.account.MihoyoDeviceFpResponse;
 import com.alibaba.fastjson2.JSON;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class MihoyoLogin {
 
     public static void main(String[] args) throws Exception {
-        mihoyoPasswordLogin(RSAUtil.encrypt(""), RSAUtil.encrypt(""), getDevice().getData().getDeviceFp());
+        mihoyoPasswordLogin(RSAUtils.encrypt(""), RSAUtils.encrypt(""), getDevice().getData().getDeviceFp());
         /* mihoyoLogin.mobileVerification("13260778819","389411");*/
     }
 
@@ -62,7 +62,7 @@ public class MihoyoLogin {
         mihoyoDeviceFpRequest.setAppName("bbs_cn");
         mihoyoDeviceFpRequest.setDeviceId("b1d55213-05d8-477b-bef2-e2dc04ba25a7");
         mihoyoDeviceFpRequest.setSeedTime(System.currentTimeMillis() + "");
-        mihoyoDeviceFpRequest.setSeedId(StringUtil.getRandomStr(16).toLowerCase());
+        mihoyoDeviceFpRequest.setSeedId(StringUtils.getRandomStr(16).toLowerCase());
         post.body(JSON.toJSONString(mihoyoDeviceFpRequest));
         HttpResponse execute = post.execute();
         System.out.println(execute);

@@ -1,10 +1,10 @@
-package cn.luorenmu.entiy;
+package cn.luorenmu.entiy.config;
 
+import cn.luorenmu.annotation.Value;
 import com.alibaba.fastjson2.PropertyNamingStrategy;
 import com.alibaba.fastjson2.annotation.JSONType;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,27 +13,33 @@ import java.util.List;
  */
 @Data
 public class Request {
+    @Value(name = "")
     private RequestClassify mihoyo;
 
+
     @Data
+    @JSONType(naming = PropertyNamingStrategy.SnakeCase)
     public static class RequestClassify {
-        private RequestData forum;
+        private RequestDetailed articleCollect;
+        private RequestDetailed article;
+        private RequestDetailed accessDevice;
+        private RequestPass requestPass;
     }
 
     @Data
     @JSONType(naming = PropertyNamingStrategy.SnakeCase)
-    public static class RequestData {
-        private RequestDetailed articleCollect;
-        private RequestDetailed article;
+    public static class RequestPass {
+        private String rsPublicKey;
     }
 
     @Data
     public static class RequestDetailed {
         private String url;
         private String method;
-        private List<RequestParam> params = new ArrayList<>();
-        private List<RequestParam> body = new ArrayList<>();
-        private List<RequestParam> headers = new ArrayList<>();
+        private List<RequestParam> params;
+        private List<RequestParam> body;
+        private List<RequestParam> headers;
+
     }
 
     @Data

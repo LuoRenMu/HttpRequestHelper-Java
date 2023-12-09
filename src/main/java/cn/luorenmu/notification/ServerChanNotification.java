@@ -4,7 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.luorenmu.common.file.FileManager;
-import cn.luorenmu.entiy.Setting;
+import cn.luorenmu.entiy.config.Setting;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @Slf4j
 public class ServerChanNotification {
-    private final static String URL = FileManager.getConfig(Setting.class).getGeneral().getServerChanUrl() + FileManager.getConfig(Setting.class).getMihoyo().getAccounts().get(0).getServerChanKey() + ".send?";
+    private final static String URL = FileManager.getConfig(Setting.class).getGeneral().getServerChanUrl() + FileManager.getConfig(Setting.class).getAccounts().get(0).getNotification().getServerChanKey() + ".send?";
 
 
     public static void sendTitle(String title) {

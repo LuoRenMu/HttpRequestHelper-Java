@@ -3,7 +3,7 @@ package cn.luorenmu.common.utils;
 import cn.hutool.http.HttpResponse;
 import cn.luorenmu.common.convert.RequestContentConvert;
 import cn.luorenmu.common.file.FileManager;
-import cn.luorenmu.entiy.Request;
+import cn.luorenmu.entiy.config.Request;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,17 +22,16 @@ public class HttpRequest {
     public static HttpResponse execute(Request.RequestDetailed requestDetailed) {
         String requestDetailedMethodmethod = requestDetailed.getMethod();
 
+
         try {
             cn.hutool.http.HttpRequest httpRequest = (cn.hutool.http.HttpRequest) RequestContentConvert.class
-                    .getMethod("requestTo" + StringUtil.firstCharacterUpperCase(requestDetailedMethodmethod),
+                    .getMethod("requestTo" + StringUtils.firstCharacterUpperCase(requestDetailedMethodmethod),
                             Request.RequestDetailed.class)
                     .invoke(null, requestDetailed);
 
-            httpRequest.headerMap(Map.of("DS", StringUtil.getDS(), "x-rpc-client_type", " 2", "x-rpc-app_version", " 2.61.1"), true);
+            httpRequest.headerMap(Map.of("DS", StringUtils.getDS(), "x-rpc-client_type", " 2", "x-rpc-app_version", " 2.61.1"), true);
             HttpResponse execute = httpRequest.execute();
-            if (log.isDebugEnabled()) {
-                log.debug(execute.toString());
-            }
+            log.debug(execute.toString());
 
             return execute;
         } catch (NoSuchMethodException e) {
@@ -47,7 +46,7 @@ public class HttpRequest {
 
     public static void main(String[] args) {
         Request config = FileManager.getConfig(Request.class);
-        Request.RequestDetailed articleCollect = config.getMihoyo().getForum().getArticleCollect();
+        Request.RequestDetailed articleCollect = config.getMihoyo().getArticleCollect();
         HttpResponse execute = execute(articleCollect);
         System.out.println(execute.body());
 

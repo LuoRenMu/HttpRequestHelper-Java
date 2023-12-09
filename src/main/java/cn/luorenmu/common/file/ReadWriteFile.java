@@ -1,6 +1,6 @@
 package cn.luorenmu.common.file;
 
-import cn.luorenmu.common.utils.StringUtil;
+import cn.luorenmu.common.utils.StringUtils;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,10 +23,9 @@ public class ReadWriteFile {
         Map<Class<?>, Object> config = new HashMap<>();
         for (String s : FILES_NAME) {
             try {
-                String fileName = StringUtil.firstCharacterUpperCase(s.substring(0, s.lastIndexOf(".")));
+                String fileName = "." + StringUtils.firstCharacterUpperCase(s.substring(0, s.lastIndexOf(".")));
                 String json = readRootFileJson(s);
-                String packagePath = FileManager.PACKAGE_PATH + ".entiy.";
-                Class<?> aClass = Class.forName(packagePath + fileName);
+                Class<?> aClass = Class.forName(FileManager.PACKAGE_SETTING_PATH + fileName);
                 Object o = JSON.parseObject(json, aClass);
                 config.put(aClass, o);
             } catch (ClassNotFoundException | StringIndexOutOfBoundsException e) {
@@ -42,9 +41,7 @@ public class ReadWriteFile {
     public static String readRootFileJson(String filename) {
         String path = FILE_PATH + filename;
         log.debug("read file path : {}", path);
-        if (!isExists(path)) {
-            fileGeneration(false);
-        }
+        checkFileThenGeneration(filename, true);
         StringBuilder sb = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
             String s;
@@ -57,20 +54,16 @@ public class ReadWriteFile {
         return sb.toString();
     }
 
-    private static boolean isExists(String path) {
-        File file = new File(path);
-        return file.exists();
-    }
-
 
     private static void getFileStreamThenCreate(String fileName, String outputPath) {
         InputStream resourceAsStream = FileManager.class.getResourceAsStream("/init/" + fileName);
+        if (resourceAsStream == null) {
+            return;
+        }
         try (BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(outputPath))) {
             byte[] bytes = new byte[1024];
             int len;
-            while (true) {
-                assert resourceAsStream != null;
-                if ((len = resourceAsStream.read(bytes)) == -1) break;
+            while ((len = resourceAsStream.read(bytes)) != -1) {
                 bufferedOutputStream.write(bytes, 0, len);
                 bufferedOutputStream.flush();
             }
@@ -80,15 +73,12 @@ public class ReadWriteFile {
     }
 
 
-    public static void fileGeneration(boolean remake) {
-        for (String fileName : FILES_NAME) {
-            String outputFilePath = FILE_PATH + fileName;
-            File file = new File(outputFilePath);
-            if (!file.exists() || remake) {
-                getFileStreamThenCreate(fileName, outputFilePath);
-            }
+    public static void checkFileThenGeneration(String fileName, boolean remake) {
+        String outputFilePath = FILE_PATH + fileName;
+        File file = new File(outputFilePath);
+        if (!file.exists() || remake) {
+            getFileStreamThenCreate(fileName, outputFilePath);
         }
-        log.info("文件初始化完成");
-
+        log.info("文件 {} 初始化完成", fileName);
     }
 }

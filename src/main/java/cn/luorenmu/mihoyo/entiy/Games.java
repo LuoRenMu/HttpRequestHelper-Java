@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
  * Date 2023.10.28 15:59
  */
 
-
+// ready delete. use json config
 @Getter
 public enum Games {
     STAR_RAIL(new GameInfo().setActId("e202304121516551").setGameBiz("hkrpg_cn").setRegion("prod_gf_cn"));

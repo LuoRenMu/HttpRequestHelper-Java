@@ -1,5 +1,8 @@
 package cn.luorenmu.common.utils;
 
+import cn.luorenmu.common.file.FileManager;
+import cn.luorenmu.entiy.config.Request;
+
 import javax.crypto.Cipher;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyFactory;
@@ -12,7 +15,7 @@ import java.util.Base64;
  * @author LoMu
  * Date 2023.11.19 14:54
  */
-public class RSAUtil {
+public class RSAUtils {
     private static final String PUBLIC_KEY = """
                MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDvekdPMHN3AYhm/vktJT+YJr7
                cI5DcsNKqdsx5DZX0gDuWFuIjzdwButrIYPNmRJ1G8ybDIF7oDW2eEpm5sMbL9zs
@@ -23,7 +26,7 @@ public class RSAUtil {
 
     public static String encrypt(String str) throws Exception {
         //base64编码的公钥
-        byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(PUBLIC_KEY);
+        byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(FileManager.getConfig(Request.class).getMihoyo().getRequestPass().getRsPublicKey());
         RSAPublicKey pubKey = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decoded));
         //RSA加密
         Cipher cipher = Cipher.getInstance("RSA");

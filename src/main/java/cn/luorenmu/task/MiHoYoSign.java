@@ -1,7 +1,8 @@
 package cn.luorenmu.task;
 
+import cn.luorenmu.annotation.impl.RunningStorage;
 import cn.luorenmu.common.file.FileManager;
-import cn.luorenmu.entiy.Setting;
+import cn.luorenmu.entiy.config.Setting;
 import cn.luorenmu.mihoyo.MihoyoAccountRequest;
 import cn.luorenmu.mihoyo.MihoyoForumRequest;
 import cn.luorenmu.mihoyo.entiy.Games;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static cn.luorenmu.mihoyo.MihoyoAccountRequest.setSignMiHoyoForm;
 
@@ -27,14 +29,17 @@ import static cn.luorenmu.mihoyo.MihoyoAccountRequest.setSignMiHoyoForm;
 
 @Slf4j
 public class MiHoYoSign {
+    private static ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE;
 
-    private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(2);
-
+    public MiHoYoSign() {
+        AtomicInteger atomicInteger = new AtomicInteger(FileManager.getConfig(Setting.class).getAccounts().size());
+        SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool(atomicInteger.intValue(), runnable -> new Thread(runnable, atomicInteger.decrementAndGet() + ""));
+    }
 
     public void signTimerTask() {
         List<SignInUser> userList = new ArrayList<>();
-        String cookieStr = FileManager.getConfig(Setting.class).getMihoyo().getAccounts().get(0).getCookie();
-        Setting.SToken sToken = FileManager.getConfig(Setting.class).getMihoyo().getAccounts().get(0).getSToken();
+        String cookieStr = FileManager.getConfig(Setting.class).getAccounts().get(0).getMihoyo().getCookie();
+        Setting.SToken sToken = FileManager.getConfig(Setting.class).getAccounts().get(0).getMihoyo().getSToken();
         MihoyoUserTokenResponse cookieAccountInfoBySToken = MihoyoAccountRequest.getCookieAccountInfoBySToken(sToken.getSTokenStr());
         System.out.println(cookieAccountInfoBySToken);
         MihoyoUserTokenResponse.UserTokenData data = cookieAccountInfoBySToken.getData();
@@ -57,16 +62,17 @@ public class MiHoYoSign {
     public void isRecentArticleTask() {
         MihoyoForumRequest mihoyoForumRequest = new MihoyoForumRequest();
         SCHEDULED_EXECUTOR_SERVICE.scheduleAtFixedRate(() -> {
+            Setting.Account account = FileManager.getConfig(Setting.class).getAccounts().get(Integer.parseInt(Thread.currentThread().getName()));
+            RunningStorage.accountThreadLocal.set(account);
             try {
                 mihoyoForumRequest.isRecentArticle();
+                log.info("版本兑换码监测已运行");
             } catch (Exception e) {
                 log.error("发生错误 : {}", e.toString());
             }
 
         }, 0, 1, TimeUnit.HOURS);
     }
-
-
 
 
 }
