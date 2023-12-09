@@ -7,7 +7,6 @@ import cn.luorenmu.entiy.config.Request;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 
 /**
  * @author LoMu
@@ -22,14 +21,12 @@ public class HttpRequest {
     public static HttpResponse execute(Request.RequestDetailed requestDetailed) {
         String requestDetailedMethodmethod = requestDetailed.getMethod();
 
-
+        RequestContentConvert requestContentConvert = new RequestContentConvert(requestDetailed);
         try {
             cn.hutool.http.HttpRequest httpRequest = (cn.hutool.http.HttpRequest) RequestContentConvert.class
-                    .getMethod("requestTo" + StringUtils.firstCharacterUpperCase(requestDetailedMethodmethod),
-                            Request.RequestDetailed.class)
-                    .invoke(null, requestDetailed);
+                    .getMethod("requestTo" + StringUtils.firstCharacterUpperCase(requestDetailedMethodmethod))
+                    .invoke(requestContentConvert);
 
-            httpRequest.headerMap(Map.of("DS", StringUtils.getDS(), "x-rpc-client_type", " 2", "x-rpc-app_version", " 2.61.1"), true);
             HttpResponse execute = httpRequest.execute();
             log.debug(execute.toString());
 

@@ -6,6 +6,8 @@ import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.common.utils.MatchData;
 import cn.luorenmu.entiy.config.Request;
 import com.alibaba.fastjson2.JSON;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -15,42 +17,67 @@ import java.util.*;
  * @author LoMu
  * Date 2023.11.25 18:56
  */
+
+@Accessors(chain = true)
 public class RequestContentConvert {
+    private final HttpRequest HTTP_REQUEST = HttpRequest.of("12312312");
+    @Setter
+    private Request.RequestDetailed requestDetailed;
 
-    public static HttpRequest requestToPost(Request.RequestDetailed requestDetailed) {
-        HttpRequest post = httpRequest(cn.hutool.http.Method.POST);
-        replaceAddData(requestDetailed, post);
-        return post;
+    public RequestContentConvert(Request.RequestDetailed requestDetailed) {
+        this.requestDetailed = requestDetailed;
+        replaceAddData();
     }
 
-    private static HttpRequest httpRequest(cn.hutool.http.Method method) {
-        return HttpRequest.of("12312312").method(method);
+    public static void main(String[] args) {
+        HttpRequest httpRequest = new RequestContentConvert(FileManager.getConfig(Request.class).getMihoyo().getArticleCollect()).requestToGet();
+        HttpResponse execute = httpRequest.execute();
+        System.out.println(httpRequest);
+        System.out.println(execute.body());
+        System.out.println(FileManager.getConfig(Request.class).getMihoyo().getArticleCollect());
     }
 
-    private static void replaceAddData(Request.RequestDetailed requestDetailed, HttpRequest request) {
+    public HttpRequest requestToPost() {
+        HTTP_REQUEST.method(cn.hutool.http.Method.POST);
+        return HTTP_REQUEST;
+    }
+
+    public HttpRequest requestToGet() {
+        HTTP_REQUEST.method(cn.hutool.http.Method.GET);
+        return HTTP_REQUEST;
+    }
+
+    private void replaceAddData() {
         if (requestDetailed.getParams() != null) {
-            List<Request.RequestParam> params = new ArrayList<>(requestDetailed.getParams());
-            replaceParams(params);
-            request.setUrl(paramToUrl(requestDetailed.getUrl(), params));
+            List<Request.RequestParam> params = replaceParamsReturnNew(requestDetailed.getParams());
+            HTTP_REQUEST.setUrl(paramToUrl(requestDetailed.getUrl(), params));
         }
         if (requestDetailed.getHeaders() != null) {
-            List<Request.RequestParam> headers = new ArrayList<>(requestDetailed.getHeaders());
-            replaceParams(headers);
-            Map<String, String> headers1 = toHeaders(headers);
-            request.addHeaders(headers1);
+            List<Request.RequestParam> headers = replaceParamsReturnNew(requestDetailed.getHeaders());
+            HTTP_REQUEST.addHeaders(toHeaders(headers));
         }
         if (requestDetailed.getBody() != null) {
-            List<Request.RequestParam> bodys = new ArrayList<>(requestDetailed.getBody());
-            request.body(bodyToJson(bodys));
+            List<Request.RequestParam> bodys = replaceParamsReturnNew(requestDetailed.getBody());
+            HTTP_REQUEST.body(RequestParamToJsonStr(bodys));
         }
 
 
     }
 
-    private static void replaceParams(List<Request.RequestParam> params) {
+    /**
+     * 如果content是使用${}将进行数据替换 在不改变原有数据的情况下 创建的新的对象返回
+     *
+     * @param params RequestParam
+     * @return RequestParam
+     */
+    private List<Request.RequestParam> replaceParamsReturnNew(List<Request.RequestParam> params) {
+        List<Request.RequestParam> newParams = new ArrayList<>();
         for (Request.RequestParam param : params) {
+            Request.RequestParam newParam = new Request.RequestParam(param);
             Optional<String> s = MatchData.scanReplaceFieldName(param.getContent());
+
             if (s.isEmpty()) {
+                newParams.add(newParam);
                 continue;
             }
             String content = s.get();
@@ -63,31 +90,22 @@ public class RequestContentConvert {
                 Class<?> aClass = Class.forName("cn.luorenmu.common.utils." + className);
                 Method method = aClass.getMethod(content.substring(s.get().lastIndexOf(".") + 1, content.lastIndexOf("(")));
                 String invoke = (String) method.invoke(null);
-                param.setContent(invoke);
+                newParam.setContent(invoke);
+
 
             } catch (ClassNotFoundException ignored) {
 
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
+            } finally {
+                newParams.add(newParam);
             }
+
         }
+        return newParams;
     }
 
-    public static void main(String[] args) {
-        HttpRequest httpRequest = requestToGet(FileManager.getConfig(Request.class).getMihoyo().getArticleCollect());
-        HttpResponse execute = httpRequest.execute();
-        System.out.println(httpRequest);
-        System.out.println(execute.body());
-    }
-
-    public static HttpRequest requestToGet(Request.RequestDetailed requestDetailed) {
-        HttpRequest httpRequest = HttpRequest.get(requestDetailed.getUrl());
-        replaceAddData(requestDetailed, httpRequest);
-        return httpRequest;
-    }
-
-
-    private static String bodyToJson(List<Request.RequestParam> requestBody) {
+    private String RequestParamToJsonStr(List<Request.RequestParam> requestBody) {
         Map<String, String> map = new HashMap<>();
         for (Request.RequestParam body : requestBody) {
             map.put(body.getName(), body.getContent());
@@ -95,7 +113,7 @@ public class RequestContentConvert {
         return JSON.toJSONString(map);
     }
 
-    private static Map<String, String> toHeaders(List<Request.RequestParam> requestHeaders) {
+    private Map<String, String> toHeaders(List<Request.RequestParam> requestHeaders) {
         Map<String, String> map = new HashMap<>();
         for (Request.RequestParam header : requestHeaders) {
             map.put(header.getName(), header.getContent());
@@ -103,7 +121,7 @@ public class RequestContentConvert {
         return map;
     }
 
-    private static String paramToUrl(String url, List<Request.RequestParam> requestParams) {
+    private String paramToUrl(String url, List<Request.RequestParam> requestParams) {
         if (requestParams == null || requestParams.isEmpty()) {
             return url;
         }

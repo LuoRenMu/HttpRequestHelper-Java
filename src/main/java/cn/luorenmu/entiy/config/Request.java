@@ -4,6 +4,7 @@ import cn.luorenmu.annotation.Value;
 import com.alibaba.fastjson2.PropertyNamingStrategy;
 import com.alibaba.fastjson2.annotation.JSONType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -43,8 +44,14 @@ public class Request {
     }
 
     @Data
+    @NoArgsConstructor
     public static class RequestParam {
         private String name;
         private String content;
+
+        public RequestParam(RequestParam param) {
+            this.name = param.name;
+            this.content = param.content;
+        }
     }
 }

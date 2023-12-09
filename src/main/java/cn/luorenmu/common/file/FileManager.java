@@ -28,7 +28,7 @@ public class FileManager {
     static {
         setFilesName();
         CONFIG_ENITYS = ReadWriteFile.initConfig();
-        log.info(CONFIG_ENITYS.toString());
+        log.info("配置已被加载: {}", CONFIG_ENITYS);
     }
 
     public static void setFilesName() {
@@ -45,9 +45,7 @@ public class FileManager {
 
     }
 
-    public static void main(String[] args) {
 
-    }
 
 
     private static String scanFilePath() {

@@ -38,7 +38,7 @@ public class MihoyoForumRequest {
     public void isRecentArticle() {
         ForumCollectList.ForumArticleSimple forumArticleSimple = getCollectionPostList().getData().getList().get(0);
         Setting.Account account = RunningStorage.accountThreadLocal.get();
-        log.info(account.toString());
+        log.info("线程 {} 已托管账户: {}", Thread.currentThread().getName(), account.toString());
         long createdAt = forumArticleSimple.getCreatedAt();
         long differTime = System.currentTimeMillis() / 1000 - createdAt;
         if (differTime <= 60 * 60 * 10) {

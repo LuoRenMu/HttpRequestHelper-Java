@@ -21,7 +21,6 @@ public class Setting {
     private General general;
 
 
-
     @Data
     @JSONType(naming = PropertyNamingStrategy.SnakeCase)
     public static class General {
@@ -53,12 +52,7 @@ public class Setting {
 
             @Override
             public String toString() {
-                return "MihoyoAccount{" +
-                        "cookie='" + cookie + '\'' +
-                        ", sToken=" + sToken +
-                        ", account='" + account + '\'' +
-                        ", password='******" + '\'' +
-                        '}';
+                return "MihoyoAccount{cookie='******', sToken='******', account='" + account + "', password='******'}";
             }
         }
     }
