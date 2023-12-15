@@ -23,7 +23,7 @@ public class ReadWriteFile {
         Map<Class<?>, Object> config = new HashMap<>();
         for (String s : FILES_NAME) {
             try {
-                String fileName = "." + StringUtils.firstCharacterUpperCase(s.substring(0, s.lastIndexOf(".")));
+                String fileName = "." + StringUtils.snakeCaseToCamelCase(s.substring(0, s.lastIndexOf(".")));
                 String json = readRootFileJson(s);
                 Class<?> aClass = Class.forName(FileManager.PACKAGE_SETTING_PATH + fileName);
                 Object o = JSON.parseObject(json, aClass);
@@ -41,7 +41,7 @@ public class ReadWriteFile {
     public static String readRootFileJson(String filename) {
         String path = FILE_PATH + filename;
         log.debug("read file path : {}", path);
-        checkFileThenGeneration(filename, true);
+        checkFileThenGeneration(filename, false);
         StringBuilder sb = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
             String s;

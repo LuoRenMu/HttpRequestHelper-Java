@@ -66,12 +66,12 @@ public class MiHoYoSign {
             RunningStorage.accountThreadLocal.set(account);
             try {
                 mihoyoForumRequest.isRecentArticle();
-                log.info("版本兑换码监测已运行");
             } catch (Exception e) {
                 log.error("发生错误 : {}", e.toString());
             }
 
         }, 0, 1, TimeUnit.HOURS);
+        log.info("版本兑换码监测已运行");
     }
 
 

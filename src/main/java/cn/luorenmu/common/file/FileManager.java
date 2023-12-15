@@ -2,6 +2,7 @@ package cn.luorenmu.common.file;
 
 
 import cn.hutool.core.lang.ClassScanner;
+import cn.luorenmu.common.utils.StringUtils;
 import cn.luorenmu.entiy.config.Setting;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,11 +41,10 @@ public class FileManager {
             if (substring.contains("$")) {
                 continue;
             }
+            substring = StringUtils.camelCaseToSnakeCase(substring);
             FILES_NAME.add(substring.toLowerCase() + ".json");
         }
-
     }
-
 
 
 

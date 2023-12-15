@@ -32,6 +32,7 @@ public class ForumArticle extends MihoyoResponse {
                 //标题
                 private String subject;
                 private String structuredontent;
+                private long updatedAt;
 
             }
         }

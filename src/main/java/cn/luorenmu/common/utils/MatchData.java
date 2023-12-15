@@ -22,6 +22,15 @@ public class MatchData {
         return Optional.empty();
     }
 
+    public static Optional<String> matcherStr(String str, String patternStr) {
+        Pattern pattern = Pattern.compile(patternStr);
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.find()) {
+            return Optional.of(matcher.group());
+        }
+        return Optional.empty();
+    }
+
 
     public static Optional<String> redeemCodes(String content) {
         String pattern = "((?<=<p>)[A-Z0-9]{12}(?=</p>))+";
