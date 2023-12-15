@@ -14,8 +14,7 @@ import cn.luorenmu.notification.ServerChanNotification;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author LoMu
@@ -25,7 +24,7 @@ import java.util.Objects;
 @Slf4j
 public class MihoyoForumRequest {
     private static final Request request = FileManager.getConfig(Request.class);
-    private static String cache;
+    private static final Map<String, String> cache = new HashMap<>();
 
 
     private ForumArticle getFourmArticle(String postId) {
@@ -36,28 +35,42 @@ public class MihoyoForumRequest {
     }
 
     public void isRecentArticle() {
-        ForumCollectList.ForumArticleSimple forumArticleSimple = getCollectionPostList().getData().getList().get(0);
+        List<ForumCollectList.ForumArticleSimple> list = getCollectionPostList().getData().getList();
+        ForumCollectList.ForumArticleSimple forumArticleSimple = Collections.max(list, (t1, t2) -> (int) (t1.getCreatedAt() - t2.getCreatedAt()));
         Setting.Account account = RunningStorage.accountThreadLocal.get();
         log.info("线程 {} 已托管账户: {}", Thread.currentThread().getName(), account.toString());
         long createdAt = forumArticleSimple.getCreatedAt();
-        long differTime = System.currentTimeMillis() / 1000 - createdAt;
-        if (differTime <= 60 * 60 * 10) {
+        long createdDifferTime = System.currentTimeMillis() / 1000 - createdAt;
+        if (createdDifferTime <= 60 * 60 * 24 * 7) {
             ForumArticle forumArticle = getFourmArticle(forumArticleSimple.getPostId());
-            String redeemCodes = MatchData.redeemCodes(forumArticle.getData().getPost().getPost().getContent()).orElse("内部错误 > 兑换码获取失败");
-            if (!Objects.equals(cache, redeemCodes)) {
-                cache = redeemCodes;
-                log.info("兑换码 : {}", redeemCodes);
-                ServerChanNotification.sendTitleAndMessage("新版本兑换码已发放", redeemCodes);
+            long updatedAt = forumArticle.getData().getPost().getPost().getUpdatedAt();
+            long updatedDifferTime = System.currentTimeMillis() / 1000 - updatedAt;
+            if (updatedDifferTime <= 60 * 60 * 10) {
+                Optional<String> redeemCodesOptional = MatchData.redeemCodes(forumArticle.getData().getPost().getPost().getContent());
+                String redeemCodes;
+                if (redeemCodesOptional.isEmpty()) {
+                    log.info("兑换码最新文章已出现,目前兑换码为null");
+                    if (cache.get("empty") == null || System.currentTimeMillis() / 1000 - Long.parseLong(cache.get("empty")) > 60 * 60 * 24) {
+                        ServerChanNotification.sendTitleAndMessage("意外:兑换码最新文章已出现", "目前兑换码为null");
+                        cache.put("empty", System.currentTimeMillis() / 1000 + "");
+                    }
+                    return;
+                }
+                redeemCodes = redeemCodesOptional.get();
+
+                if (!Objects.equals(cache.get(redeemCodes), redeemCodes)) {
+                    cache.put("redeemCodes", redeemCodes);
+
+                    log.info("兑换码 : {}", redeemCodes);
+                    ServerChanNotification.sendTitleAndMessage("新版本兑换码已发放", redeemCodes);
+                }
             }
         }
     }
 
 
-
-
-
     private ForumCollectList getCollectionPostList() {
-        HttpResponse execute = cn.luorenmu.common.utils.HttpRequest.execute(request.getMihoyo().getArticleCollect());
+        HttpResponse execute = cn.luorenmu.common.request.HttpRequest.execute(request.getMihoyo().getArticleCollect());
         return JSON.parseObject(execute.body(), ForumCollectList.class);
     }
 }
