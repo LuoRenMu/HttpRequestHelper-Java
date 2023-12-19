@@ -26,6 +26,7 @@ public class Setting {
     public static class General {
         private MailAccount mail;
         private String serverChanUrl;
+
     }
 
 
@@ -33,6 +34,13 @@ public class Setting {
     public static class Account {
         private MihoyoAccount mihoyo;
         private AccountNotification notification;
+        private FF14Account ff14;
+
+        @Data
+        @JSONType(naming = PropertyNamingStrategy.SnakeCase)
+        public static class FF14Account {
+            private String cookie;
+        }
 
         @Data
         @JSONType(naming = PropertyNamingStrategy.SnakeCase)

@@ -1,86 +1,27 @@
 {
-  "retcode": 0,
-  "message": "OK",
+  "code": 10000,
+  "msg": "操作成功",
   "data": {
-    "list": [
-      {
-        "post_id": "46482822",
-        "subject": "【崩铁】1.6版本前瞻直播兑换码（国/国际服）+前瞻信息",
-        "content": "开拓者们，大家好啊_(寒鸦 打叉)               这里是天龙筮，本期是1.6版本「庸与神的冠冕」的前瞻直播兑换码篇+前瞻信息                               ",
-        "banner": "https://upload-bbs.miyoushe.com/upload/2023/12/12/74236738/fba2edd629164f33d9d7b42921be4e8b_987949276979753868.png",
-        "collection_id": "2058162",
-        "created_at": 1702396182,
-        "reply_num": 4,
-        "like_num": 6,
-        "collection_title": "【崩铁】前瞻特别节目兑换码篇",
-        "view_type": 1,
-        "is_mentor": false
-      },
-      {
-        "post_id": "45005725",
-        "subject": "【崩铁】1.5版本前瞻直播兑换码（国/国际服）+前瞻信息",
-        "content": "开拓者们，大家好啊_(桂乃芬 略略)               这里是天龙筮，本期是1.5版本「迷离幻夜谈」的前瞻直播兑换码篇+前瞻信息                               ",
-        "banner": "https://upload-bbs.miyoushe.com/upload/2023/10/31/74236738/51fed9edf229fa1db1954c3912a019cb_8782053478410207253.png",
-        "collection_id": "2058162",
-        "created_at": 1698730741,
-        "reply_num": 131,
-        "like_num": 2045,
-        "collection_title": "【崩铁】前瞻特别节目兑换码篇",
-        "view_type": 1,
-        "is_mentor": false
-      },
-      {
-        "post_id": "43746612",
-        "subject": "【崩铁】1.4版本前瞻直播兑换码（国/国际服）+前瞻信息",
-        "content": "开拓者们，大家好啊_(驭空 飙车)               这里是天龙筮，本期是1.4版本「冬梦激醒」的前瞻直播兑换码篇+前瞻信息                                 ",
-        "banner": "https://upload-bbs.miyoushe.com/upload/2023/09/25/74236738/b54b20517266a7f651fabd1d9284526d_1720306211797432197.png",
-        "collection_id": "2058162",
-        "created_at": 1695616416,
-        "reply_num": 123,
-        "like_num": 492,
-        "collection_title": "【崩铁】前瞻特别节目兑换码篇",
-        "view_type": 1,
-        "is_mentor": false
-      },
-      {
-        "post_id": "42405599",
-        "subject": "【崩铁】1.3版本前瞻直播兑换码（国/国际服）+前瞻信息",
-        "content": "开拓者们，大家好啊_(丹恒 惊)               这里是天龙筮，本期是1.3版本「天镜映劫尘」的前瞻直播兑换码篇+前瞻信息                                 ",
-        "banner": "https://upload-bbs.miyoushe.com/upload/2023/08/15/74236738/9e7349d4d21a344eef6cc76efcf434e2_1493080892876666071.png",
-        "collection_id": "2058162",
-        "created_at": 1692114485,
-        "reply_num": 109,
-        "like_num": 308,
-        "collection_title": "【崩铁】前瞻特别节目兑换码篇",
-        "view_type": 1,
-        "is_mentor": false
-      },
-      {
-        "post_id": "40911330",
-        "subject": "【崩铁】1.2版本前瞻直播兑换码（国/国际服）+前瞻信息",
-        "content": "开拓者们，大家好啊_(姬子 计算)               这里是天龙筮，本期是1.2版本「仙骸有终」的前瞻直播兑换码篇+前瞻信息                                 ",
-        "banner": "https://upload-bbs.miyoushe.com/upload/2023/07/08/74236738/602e25d97c46f32473b3e30fdbce0e8b_5216117048407932948.png",
-        "collection_id": "2058162",
-        "created_at": 1688395124,
-        "reply_num": 180,
-        "like_num": 332,
-        "collection_title": "【崩铁】前瞻特别节目兑换码篇",
-        "view_type": 1,
-        "is_mentor": false
-      },
-      {
-        "post_id": "39613910",
-        "subject": "【崩铁】1.1版本前瞻直播兑换码（国/国际服）+前瞻信息",
-        "content": "开拓者们，大家好啊_(白露 给你)               这里是天龙筮，本期是1.1版本「银河漫游」的前瞻直播兑换码篇+前瞻信息                                 ",
-        "banner": "https://upload-bbs.miyoushe.com/upload/2023/05/22/74236738/74430a78b295b5f0c555c075be1851de_490544645171804679.png",
-        "collection_id": "2058162",
-        "created_at": 1684767039,
-        "reply_num": 194,
-        "like_num": 478,
-        "collection_title": "【崩铁】前瞻特别节目兑换码篇",
-        "view_type": 1,
-        "is_mentor": false
-      }
-    ]
+    "onceTask": {
+      "complete_avatar": null,
+      "cpt_avatar_uuid": null,
+      "complete_profile": null,
+      "cpt_profile_uuid": null,
+      "complete_follow": null,
+      "cpt_follow_uuid": null,
+      "complete_issue": null,
+      "cpt_issue_uuid": null,
+      "complete_questionnaire": null,
+      "cpt_questionnaire_uuid": null,
+      "seal_total": 3
+    },
+    "dayTask": {
+      "sign_status": 1,
+      "sign_seal": 0,
+      "like_num": 0,
+      "like_seal": 0,
+      "comment_status": 0,
+      "comment_seal": 0
+    }
   }
 }

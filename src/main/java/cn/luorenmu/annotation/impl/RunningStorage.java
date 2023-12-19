@@ -32,7 +32,7 @@ public class RunningStorage {
                 Target annotation = aClass.getAnnotation(Target.class);
                 for (Class<?> bClass : allClasses) {
                     for (ElementType elementType : annotation.value()) {
-                        Method method = Class.class.getMethod("getDeclared" + StringUtils.firstCharacterUpperCase(elementType.name() + "s"));
+                        Method method = Class.class.getMethod("getDeclared" + StringUtils.firstCharacterUpperCaseOtherLowerCase(elementType.name() + "s"));
                         method.setAccessible(true);
                         Object[] invoke = (Object[]) method.invoke(bClass);
                         for (Object o : invoke) {

@@ -2,8 +2,10 @@ package cn.luorenmu.common.convert;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import cn.luorenmu.annotation.impl.RunningStorage;
 import cn.luorenmu.common.file.FileManager;
-import cn.luorenmu.common.utils.MatchData;
+import cn.luorenmu.common.utils.MatcherData;
+import cn.luorenmu.entiy.RequestType;
 import cn.luorenmu.entiy.config.Request;
 import com.alibaba.fastjson2.JSON;
 import lombok.Setter;
@@ -51,6 +53,8 @@ public class RequestContentConvert {
         if (requestDetailed.getParams() != null) {
             List<Request.RequestParam> params = replaceParamsReturnNew(requestDetailed.getParams());
             HTTP_REQUEST.setUrl(paramToUrl(requestDetailed.getUrl(), params));
+        } else {
+            HTTP_REQUEST.setUrl(paramToUrl(requestDetailed.getUrl(), null));
         }
         if (requestDetailed.getHeaders() != null) {
             List<Request.RequestParam> headers = replaceParamsReturnNew(requestDetailed.getHeaders());
@@ -74,13 +78,19 @@ public class RequestContentConvert {
         List<Request.RequestParam> newParams = new ArrayList<>();
         for (Request.RequestParam param : params) {
             Request.RequestParam newParam = new Request.RequestParam(param);
-            Optional<String> s = MatchData.scanReplaceFieldName(param.getContent());
+            Optional<String> s = MatcherData.scanReplaceFieldName(param.getContent());
 
             if (s.isEmpty()) {
                 newParams.add(newParam);
                 continue;
             }
             String content = s.get();
+            if (content.equalsIgnoreCase("cookie")) {
+                if (requestDetailed.getRequestType() == RequestType.FF14) {
+                    newParam.setContent(RunningStorage.accountThreadLocal.get().getFf14().getCookie());
+                }
+            }
+
             String className = s.get();
             if (content.contains("()")) {
                 className = className.substring(0, content.lastIndexOf("."));
@@ -121,16 +131,40 @@ public class RequestContentConvert {
         return map;
     }
 
+    private String findClassMethodInvoke(String methodStr) {
+        String[] split = methodStr.split(":");
+        try {
+            Class<?> aClass = Class.forName("cn.luorenmu.common.utils." + split[0]);
+            Method method = aClass.getMethod(split[1], String.class);
+            return (String) method.invoke(null, split[2]);
+        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
+                 InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private String paramToUrl(String url, List<Request.RequestParam> requestParams) {
+        Optional<String> s = MatcherData.scanReplaceFieldName(url);
+        if (s.isPresent()) {
+            String methodInvoke = findClassMethodInvoke(s.get());
+            url = url.replace(String.format("${%s}", s.get()), methodInvoke);
+        }
+
         if (requestParams == null || requestParams.isEmpty()) {
             return url;
         }
+
         StringBuilder newUrl = new StringBuilder(url);
         newUrl.append("?");
         for (Request.RequestParam param : requestParams) {
             newUrl.append(param.getName());
             newUrl.append("=");
-            newUrl.append(param.getContent());
+            Optional<String> contentOptional = MatcherData.scanReplaceFieldName(param.getContent());
+            String content = param.getContent();
+            if (contentOptional.isPresent()) {
+                content = findClassMethodInvoke(contentOptional.get());
+            }
+            newUrl.append(content);
             newUrl.append("&");
         }
         return newUrl.toString();

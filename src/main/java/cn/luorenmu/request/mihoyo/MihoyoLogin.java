@@ -1,11 +1,11 @@
-package cn.luorenmu.mihoyo;
+package cn.luorenmu.request.mihoyo;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.luorenmu.common.utils.RSAUtils;
 import cn.luorenmu.common.utils.StringUtils;
-import cn.luorenmu.mihoyo.entiy.account.MihoyoDeviceFpRequest;
-import cn.luorenmu.mihoyo.entiy.account.MihoyoDeviceFpResponse;
+import cn.luorenmu.request.mihoyo.entiy.account.MihoyoDeviceFpRequest;
+import cn.luorenmu.request.mihoyo.entiy.account.MihoyoDeviceFpResponse;
 import com.alibaba.fastjson2.JSON;
 
 import java.util.Map;

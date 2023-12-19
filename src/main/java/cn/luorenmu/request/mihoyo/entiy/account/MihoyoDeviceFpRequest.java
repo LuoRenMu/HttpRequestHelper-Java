@@ -1,4 +1,4 @@
-package cn.luorenmu.mihoyo.entiy.account;
+package cn.luorenmu.request.mihoyo.entiy.account;
 
 import com.alibaba.fastjson2.PropertyNamingStrategy;
 import com.alibaba.fastjson2.annotation.JSONType;

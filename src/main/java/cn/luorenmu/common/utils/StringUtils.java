@@ -3,8 +3,10 @@ package cn.luorenmu.common.utils;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,12 +33,12 @@ public class StringUtils {
 
     public static String snakeCaseToCamelCase(String string) {
         if (!string.contains("_")) {
-            return firstCharacterUpperCase(string);
+            return firstCharacterUpperCaseOtherLowerCase(string);
         }
         StringBuilder stringBuilder = new StringBuilder();
         String[] s = string.split("_");
         for (String s1 : s) {
-            stringBuilder.append(firstCharacterUpperCase(s1));
+            stringBuilder.append(firstCharacterUpperCaseOtherLowerCase(s1));
         }
         return stringBuilder.toString();
     }
@@ -74,14 +76,47 @@ public class StringUtils {
     }
 
     /**
+     * 将y m d 这些字符替换成当前的年月 yy -> 23  M -> 12  d -> 19
+     * 使用_分隔 -> y_m_d
+     * separateStr 分隔符
+     *
+     * @return 23 12 9
+     */
+    public static String yearMonthDayReplace(String dateStr, String separateStr) {
+        String[] dates = dateStr.split("_");
+        StringBuilder builder = new StringBuilder();
+        for (String date : dates) {
+            builder.append(date);
+            if (separateStr != null) {
+                builder.append(separateStr);
+            }
+        }
+        if (!builder.isEmpty() && separateStr != null) {
+            builder.delete(builder.length() - 1, builder.length());
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(builder.toString());
+        return simpleDateFormat.format(new Date());
+    }
+
+    public static String yearMonthDayReplace(String dateStr) {
+        return yearMonthDayReplace(dateStr, null);
+    }
+
+
+
+    /**
      * 第一个字符大写
      *
      * @param str 字符
      * @return String
      */
 
-    public static String firstCharacterUpperCase(String str) {
+    public static String firstCharacterUpperCaseOtherLowerCase(String str) {
         return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+    }
+
+    public static String firstCharacterUpperCase(String str) {
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
 

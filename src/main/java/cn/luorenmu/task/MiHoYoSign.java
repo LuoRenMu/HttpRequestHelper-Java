@@ -3,13 +3,12 @@ package cn.luorenmu.task;
 import cn.luorenmu.annotation.impl.RunningStorage;
 import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.entiy.config.Setting;
-import cn.luorenmu.mihoyo.MihoyoAccountRequest;
-import cn.luorenmu.mihoyo.MihoyoForumRequest;
-import cn.luorenmu.mihoyo.entiy.Games;
-import cn.luorenmu.mihoyo.entiy.SignInfoRespone;
-import cn.luorenmu.mihoyo.entiy.account.MihoyoUserTokenResponse;
-import cn.luorenmu.mihoyo.entiy.account.SignInUser;
-import cn.luorenmu.notification.ServerChanNotification;
+import cn.luorenmu.request.mihoyo.MihoyoAccountRequest;
+import cn.luorenmu.request.mihoyo.MihoyoForumRequest;
+import cn.luorenmu.request.mihoyo.entiy.Games;
+import cn.luorenmu.request.mihoyo.entiy.SignInfoRespone;
+import cn.luorenmu.request.mihoyo.entiy.account.MihoyoUserTokenResponse;
+import cn.luorenmu.request.mihoyo.entiy.account.SignInUser;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static cn.luorenmu.mihoyo.MihoyoAccountRequest.setSignMiHoyoForm;
+import static cn.luorenmu.request.mihoyo.MihoyoAccountRequest.setSignMiHoyoForm;
 
 
 /**
@@ -50,11 +49,11 @@ public class MiHoYoSign {
             for (SignInUser user : userList) {
                 SignInfoRespone signInInfoRespone = MihoyoAccountRequest.getSignInfoRespone(user);
                 if (signInInfoRespone.getData().isSign()) {
-                    ServerChanNotification.sendTitle("今天的签到已经完成");
+                    //TODO notice
                     return;
                 }
                 String message = MihoyoAccountRequest.signOperate(user, setSignMiHoyoForm(user.getUid(), Games.STAR_RAIL));
-                ServerChanNotification.sendTitle(message);
+                //TODO notice
             }
         }, 0, 24, TimeUnit.HOURS);
     }

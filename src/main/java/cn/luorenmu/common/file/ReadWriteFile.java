@@ -29,7 +29,6 @@ public class ReadWriteFile {
                 Object o = JSON.parseObject(json, aClass);
                 config.put(aClass, o);
             } catch (ClassNotFoundException | StringIndexOutOfBoundsException e) {
-
                 log.error("文件解析失败 \nfile -> " + s + " <- init failed");
                 throw new RuntimeException(e);
             }
@@ -38,10 +37,11 @@ public class ReadWriteFile {
         return config;
     }
 
+
     public static String readRootFileJson(String filename) {
         String path = FILE_PATH + filename;
         log.debug("read file path : {}", path);
-        checkFileThenGeneration(filename, false);
+        checkFileThenGeneration(filename, true);
         StringBuilder sb = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
             String s;

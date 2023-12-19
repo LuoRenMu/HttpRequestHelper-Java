@@ -1,6 +1,6 @@
-package cn.luorenmu.mihoyo.entiy.account;
+package cn.luorenmu.request.mihoyo.entiy.account;
 
-import cn.luorenmu.mihoyo.entiy.Games;
+import cn.luorenmu.request.mihoyo.entiy.Games;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;

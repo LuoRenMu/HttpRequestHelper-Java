@@ -20,7 +20,6 @@ import java.util.Set;
 
 @Slf4j
 public class FileManager {
-
     protected static final String FILE_PATH = scanFilePath();
     protected static final String PACKAGE_SETTING_PATH = Setting.class.getPackageName();
     protected static final Set<String> FILES_NAME = new HashSet<>();
@@ -45,7 +44,6 @@ public class FileManager {
             FILES_NAME.add(substring.toLowerCase() + ".json");
         }
     }
-
 
 
     private static String scanFilePath() {

@@ -1,16 +1,16 @@
-package cn.luorenmu.mihoyo;
+package cn.luorenmu.request.mihoyo;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
-import cn.luorenmu.mihoyo.entiy.Games;
-import cn.luorenmu.mihoyo.entiy.SignInfoRespone;
-import cn.luorenmu.mihoyo.entiy.SignRespone;
-import cn.luorenmu.mihoyo.entiy.SignRewardInfo;
-import cn.luorenmu.mihoyo.entiy.account.MihoyoUserGameInfoResponse;
-import cn.luorenmu.mihoyo.entiy.account.MihoyoUserTicketResponse;
-import cn.luorenmu.mihoyo.entiy.account.MihoyoUserTokenResponse;
-import cn.luorenmu.mihoyo.entiy.account.SignInUser;
+import cn.luorenmu.request.mihoyo.entiy.Games;
+import cn.luorenmu.request.mihoyo.entiy.SignInfoRespone;
+import cn.luorenmu.request.mihoyo.entiy.SignRespone;
+import cn.luorenmu.request.mihoyo.entiy.SignRewardInfo;
+import cn.luorenmu.request.mihoyo.entiy.account.MihoyoUserGameInfoResponse;
+import cn.luorenmu.request.mihoyo.entiy.account.MihoyoUserTicketResponse;
+import cn.luorenmu.request.mihoyo.entiy.account.MihoyoUserTokenResponse;
+import cn.luorenmu.request.mihoyo.entiy.account.SignInUser;
 import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 

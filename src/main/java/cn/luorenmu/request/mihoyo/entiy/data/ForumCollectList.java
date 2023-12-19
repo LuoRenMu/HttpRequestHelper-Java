@@ -1,6 +1,6 @@
-package cn.luorenmu.mihoyo.entiy.data;
+package cn.luorenmu.request.mihoyo.entiy.data;
 
-import cn.luorenmu.mihoyo.entiy.MihoyoResponse;
+import cn.luorenmu.request.mihoyo.entiy.MihoyoResponse;
 import com.alibaba.fastjson2.PropertyNamingStrategy;
 import com.alibaba.fastjson2.annotation.JSONType;
 import lombok.Data;

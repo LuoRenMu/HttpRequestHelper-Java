@@ -32,16 +32,16 @@ public class HttpRequest {
             log.error("{} method is none  replace default GET method", requestDetailed);
             requestDetailedMethodmethod = "get";
         }
-
         RequestContentConvert requestContentConvert = new RequestContentConvert(requestDetailed);
         try {
             cn.hutool.http.HttpRequest httpRequest = (cn.hutool.http.HttpRequest) RequestContentConvert.class
-                    .getMethod("requestTo" + StringUtils.firstCharacterUpperCase(requestDetailedMethodmethod))
+                    .getMethod("requestTo" + StringUtils.firstCharacterUpperCaseOtherLowerCase(requestDetailedMethodmethod))
                     .invoke(requestContentConvert);
 
+            log.debug("HTTPRequest: {} ", httpRequest);
             TimeUnit.SECONDS.sleep(5L);
             HttpResponse response = httpRequest.execute();
-            log.debug("HTTPRequest: {} \n HTTPResponse: {}", httpRequest, response);
+            log.debug("HTTPResponse: {}", response);
             return response;
         } catch (NoSuchMethodException e) {
             log.error("not support request method : {}", requestDetailed);

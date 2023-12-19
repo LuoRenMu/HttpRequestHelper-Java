@@ -19,7 +19,7 @@ public class Automatic {
         for (Field field : fields) {
             if (field.getName().equals(fieldName)) {
                 try {
-                    String methodName = "set" + StringUtils.firstCharacterUpperCase(fieldName);
+                    String methodName = "set" + StringUtils.firstCharacterUpperCaseOtherLowerCase(fieldName);
                     Method method = classo.getMethod(methodName, classa);
                     method.invoke(object, args);
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
@@ -47,7 +47,7 @@ public class Automatic {
                 if (s.contains(fieldName)) {
                     try {
                         String param = s.substring(s.indexOf("=") + 1);
-                        String methodName = "set" + StringUtils.firstCharacterUpperCase(fieldName);
+                        String methodName = "set" + StringUtils.firstCharacterUpperCaseOtherLowerCase(fieldName);
                         Method method = classo.getMethod(methodName, classa);
                         method.invoke(object, param);
                     } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

@@ -83,5 +83,53 @@
     "request_pass": {
       "rs_public_key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDvekdPMHN3AYhm/vktJT+YJr7cI5DcsNKqdsx5DZX0gDuWFuIjzdwButrIYPNmRJ1G8ybDIF7oDW2eEpm5sMbL9zs9ExXCdvqrn51qELbqj0XxtMTIpaCHFSI50PfPpTFV9Xt/hmyVwokoOXFlAEgCn+QCgGs52bFoYMtyi+xEQIDAQAB"
     }
+  },
+  "ff14": {
+    "my_task_info": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/myTaskInfo",
+      "method": "get",
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
+        }
+      ]
+    },
+    "sign_in": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/sign/signIn",
+      "method": "post",
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
+        }
+      ]
+    },
+    "sign_reward_list": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/sign/signRewardList",
+      "method": "get",
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
+        }
+      ]
+    },
+    "my_sign_log": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/sign/mySignLog",
+      "method": "get",
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
+        }
+      ],
+      "params": [
+        {
+          "name": "month",
+          "content": "${StringUtils:yearMonthDayReplace:yyyy-M}"
+        }
+      ]
+    }
   }
 }
