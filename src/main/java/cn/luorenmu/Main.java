@@ -11,5 +11,7 @@ public class Main {
     public static void main(String[] args) {
         MiHoYoSign miHoYoSign = new MiHoYoSign();
         miHoYoSign.isRecentArticleTask();
+      /*  RequestTask requestTask = new RequestTask();
+        requestTask.execute();*/
     }
 }

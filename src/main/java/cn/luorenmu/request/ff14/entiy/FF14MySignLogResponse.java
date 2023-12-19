@@ -19,7 +19,7 @@ public class FF14MySignLogResponse extends FF14Response {
     @Data
     public static class MySignLogData {
         private int count;
-        private List<MySignLogRowData> row;
+        private List<MySignLogRowData> rows;
 
         @Data
         @JSONType(naming = PropertyNamingStrategy.SnakeCase)
@@ -29,7 +29,7 @@ public class FF14MySignLogResponse extends FF14Response {
             private String groupName;
             private String id;
             private String ipLocation;
-            private String platform;
+            private int platform;
             private String signTime;
             private String uuid;
         }

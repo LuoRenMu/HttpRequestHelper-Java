@@ -16,7 +16,7 @@
       "headers": [
         {
           "name": "DS",
-          "content": "${StringUtils.getDS()}"
+          "content": "${StringUtils:getDS}"
         },
         {
           "name": "x-rpc-client_type",
@@ -68,7 +68,7 @@
         },
         {
           "name": "act_id",
-          "content": "${e202304121516551/game.act_id}"
+          "content": "e202304121516551"
         },
         {
           "name": "region",
@@ -76,7 +76,7 @@
         },
         {
           "name": "uid",
-          "content": "${user.uid}"
+          "content": "#{user.uid}"
         }
       ]
     },
@@ -128,6 +128,104 @@
         {
           "name": "month",
           "content": "${StringUtils:yearMonthDayReplace:yyyy-M}"
+        }
+      ]
+    },
+    "do_seal": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/doSeal",
+      "method": "post",
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
+        }
+      ],
+      "body": [
+        {
+          "name": "type",
+          "content": "${customize}"
+        }
+      ]
+    },
+    "comment": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/posts/comment?tempsuid=${StringUtils:getRandomStrLowerCase:16}",
+      "method": "post",
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
+        }
+      ],
+      "body": [
+        {
+          "name": "content",
+          "content": "<p>跟签</p>"
+        },
+        {
+          "name": "posts_id",
+          "content": 19038
+        },
+        {
+          "name": "parent_id",
+          "content": 0
+        },
+        {
+          "name": "root_parent",
+          "content": 0
+        },
+        {
+          "name": "comment_pic",
+          "content": ""
+        },
+        {
+          "name": "tempsuid",
+          "content": "${StringUtils:getRandomStrLowerCase:16}"
+        }
+      ]
+    },
+    "like": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/posts/like",
+      "method": "post",
+      "params": [
+        {
+          "name": "tempsuid",
+          "content": "${StringUtils:getRandomStrLowerCase:16}"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
+        }
+      ],
+      "body": [
+        {
+          "name": "type",
+          "content": 1
+        },
+        {
+          "name": "id",
+          "content": 19038
+        },
+        {
+          "name": "tempsuid",
+          "content": "${StringUtils:getRandomStrLowerCase:16}"
+        }
+      ]
+    },
+    "get_seal_reward": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online2312/getSealReward",
+      "method": "get",
+      "params": [
+        {
+          "name": "seal_num",
+          "content": "${customize}"
+        }
+      ],
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
         }
       ]
     }

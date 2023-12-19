@@ -25,9 +25,11 @@ public class RequestContentConvert {
     private final HttpRequest HTTP_REQUEST = HttpRequest.of("12312312");
     @Setter
     private Request.RequestDetailed requestDetailed;
+    private final List<String> args;
 
-    public RequestContentConvert(Request.RequestDetailed requestDetailed) {
+    public RequestContentConvert(Request.RequestDetailed requestDetailed, String... args) {
         this.requestDetailed = requestDetailed;
+        this.args = List.of(args);
         replaceAddData();
     }
 
@@ -89,27 +91,16 @@ public class RequestContentConvert {
                 if (requestDetailed.getRequestType() == RequestType.FF14) {
                     newParam.setContent(RunningStorage.accountThreadLocal.get().getFf14().getCookie());
                 }
+            } else if (content.equalsIgnoreCase("customize")) {
+                //TODO
+                newParam.setContent(args.get(0));
+            } else {
+                String classMethodInvoke = findClassMethodInvoke(content);
+                newParam.setContent(classMethodInvoke);
             }
 
-            String className = s.get();
-            if (content.contains("()")) {
-                className = className.substring(0, content.lastIndexOf("."));
-            }
 
-            try {
-                Class<?> aClass = Class.forName("cn.luorenmu.common.utils." + className);
-                Method method = aClass.getMethod(content.substring(s.get().lastIndexOf(".") + 1, content.lastIndexOf("(")));
-                String invoke = (String) method.invoke(null);
-                newParam.setContent(invoke);
-
-
-            } catch (ClassNotFoundException ignored) {
-
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            } finally {
-                newParams.add(newParam);
-            }
+            newParams.add(newParam);
 
         }
         return newParams;
@@ -136,7 +127,11 @@ public class RequestContentConvert {
         try {
             Class<?> aClass = Class.forName("cn.luorenmu.common.utils." + split[0]);
             Method method = aClass.getMethod(split[1], String.class);
-            return (String) method.invoke(null, split[2]);
+            if (split.length == 2) {
+                return (String) method.invoke(null, "1");
+            } else {
+                return (String) method.invoke(null, split[2]);
+            }
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
                  InvocationTargetException e) {
             throw new RuntimeException(e);
@@ -162,7 +157,12 @@ public class RequestContentConvert {
             Optional<String> contentOptional = MatcherData.scanReplaceFieldName(param.getContent());
             String content = param.getContent();
             if (contentOptional.isPresent()) {
-                content = findClassMethodInvoke(contentOptional.get());
+                if (contentOptional.get().equalsIgnoreCase("customize")) {
+                    //TODO :
+                    content = args.get(0);
+                } else {
+                    content = findClassMethodInvoke(contentOptional.get());
+                }
             }
             newUrl.append(content);
             newUrl.append("&");

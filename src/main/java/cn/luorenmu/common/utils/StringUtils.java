@@ -31,6 +31,10 @@ public class StringUtils {
         return sb.toString();
     }
 
+    public static String getRandomStrLowerCase(String num) {
+        return getRandomStr(Integer.parseInt(num)).toLowerCase();
+    }
+
     public static String snakeCaseToCamelCase(String string) {
         if (!string.contains("_")) {
             return firstCharacterUpperCaseOtherLowerCase(string);
@@ -125,6 +129,11 @@ public class StringUtils {
         String r = StringUtils.getRandomStr(6);
         return createDS("uTUzziiV9FazyGA7XgVIk287ZczinFRV", i, r);
     }
+
+    public static String getDS(String a) {
+        return getDS();
+    }
+
 
 
     /**

@@ -40,7 +40,6 @@ public class MihoyoForumRequest {
         List<ForumCollectList.ForumArticleSimple> list = getCollectionPostList().getData().getList();
         ForumCollectList.ForumArticleSimple forumArticleSimple = Collections.max(list, (t1, t2) -> (int) (t1.getCreatedAt() - t2.getCreatedAt()));
         Setting.Account account = RunningStorage.accountThreadLocal.get();
-        log.info("线程 {} 已托管账户: {}", Thread.currentThread().getName(), account.toString());
         Notification notification = new ServerChanNotification(account.getNotification().getServerChanKey());
         long createdAt = forumArticleSimple.getCreatedAt();
         long createdDifferTime = System.currentTimeMillis() / 1000 - createdAt;

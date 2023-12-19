@@ -26,13 +26,13 @@ public class HttpRequest {
      * @param requestDetailed RequestDetailed
      * @return HttpResponse
      */
-    public synchronized static HttpResponse execute(Request.RequestDetailed requestDetailed) {
+    public synchronized static HttpResponse execute(Request.RequestDetailed requestDetailed, String... args) {
         String requestDetailedMethodmethod = requestDetailed.getMethod();
         if (requestDetailedMethodmethod == null) {
             log.error("{} method is none  replace default GET method", requestDetailed);
             requestDetailedMethodmethod = "get";
         }
-        RequestContentConvert requestContentConvert = new RequestContentConvert(requestDetailed);
+        RequestContentConvert requestContentConvert = new RequestContentConvert(requestDetailed, args);
         try {
             cn.hutool.http.HttpRequest httpRequest = (cn.hutool.http.HttpRequest) RequestContentConvert.class
                     .getMethod("requestTo" + StringUtils.firstCharacterUpperCaseOtherLowerCase(requestDetailedMethodmethod))

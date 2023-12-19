@@ -4,6 +4,7 @@ package cn.luorenmu.entiy.config;
 import cn.luorenmu.entiy.RequestType;
 import com.alibaba.fastjson2.PropertyNamingStrategy;
 import com.alibaba.fastjson2.annotation.JSONType;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +26,11 @@ public class Request {
         private RequestDetailed myTaskInfo;
         private RequestDetailed mySignLog;
         private RequestDetailed signIn;
-
+        private RequestDetailed signRewardList;
+        private RequestDetailed comment;
+        private RequestDetailed like;
+        private RequestDetailed doSeal;
+        private RequestDetailed getSealReward;
 
     }
 
@@ -56,6 +61,7 @@ public class Request {
 
     @Data
     @NoArgsConstructor
+    @AllArgsConstructor
     public static class RequestParam {
         private String name;
         private String content;
@@ -64,5 +70,6 @@ public class Request {
             this.name = param.name;
             this.content = param.content;
         }
+
     }
 }
