@@ -34,6 +34,19 @@ public class FF14MyTaskInfoResponse extends FF14Response {
             private int likeSeal;
             private int commentStatus;
             private int commentSeal;
+
+            public boolean likeSealComplete() {
+                return likeSeal == 1;
+            }
+
+            public boolean signSealComplete() {
+                return signSeal == 1;
+            }
+
+            public boolean commentSealComplete() {
+                return commentSeal == 1;
+            }
+
         }
     }
 }

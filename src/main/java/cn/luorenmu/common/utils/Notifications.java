@@ -13,19 +13,15 @@ import cn.luorenmu.notification.impl.ServerChanNotification;
  */
 public class Notifications {
 
-    public static boolean sendAllNotification(String title, String message) {
+    public static void sendAllNotification(String title, String message) {
         Setting.AccountNotification user = RunningStorage.accountThreadLocal.get().getNotification();
-        boolean success = false;
         if (!user.getServerChanKey().isBlank()) {
             Notification notification = new ServerChanNotification(user.getServerChanKey());
             notification.sendLongNotification(title, message);
-            success = true;
         }
         if (!user.getEmail().isBlank()) {
             Notification notification = new EmailNotification(user.getEmail());
             notification.sendLongNotification(title, message);
-            success = true;
         }
-        return success;
     }
 }

@@ -3,10 +3,17 @@ package cn.luorenmu.request.ff14;
 import cn.hutool.http.HttpResponse;
 import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.common.request.HttpRequest;
+import cn.luorenmu.common.utils.Notifications;
 import cn.luorenmu.entiy.RequestType;
 import cn.luorenmu.entiy.config.Request;
 import cn.luorenmu.request.ff14.entiy.*;
 import com.alibaba.fastjson2.JSON;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author LoMu
@@ -16,10 +23,15 @@ public class FF14ForumRequest {
     private static final Request.RequestFF14 request = FileManager.getConfig(Request.class).getFf14();
 
 
+    protected static HttpResponse ff14Request(Request.RequestDetailed requestDetailed, String... args) {
+        requestDetailed.setRequestType(RequestType.FF14);
+        return HttpRequest.execute(requestDetailed, args);
+    }
+
     /**
      * 任务详情
      *
-     * @return bool
+     * @return FF14MyTaskInfoResponse
      */
     public FF14MyTaskInfoResponse myTaskInfo() {
         HttpResponse response = ff14Request(request.getMyTaskInfo());
@@ -27,55 +39,171 @@ public class FF14ForumRequest {
 
     }
 
+    /**
+     * 评论
+     *
+     * @return FF14Response
+     */
     public FF14Response comment() {
         HttpResponse response = ff14Request(request.getComment());
         return JSON.parseObject(response.body(), FF14Response.class);
     }
 
-    private HttpResponse ff14Request(Request.RequestDetailed requestDetailed, String... args) {
-        requestDetailed.setRequestType(RequestType.FF14);
-        return HttpRequest.execute(requestDetailed, args);
-    }
-
-    public boolean doSeal(String num) {
+    /**
+     * 印章(任务完成)
+     *
+     * @param num 1 = 签到  2 = 点赞*5   3 = 评论
+     * @return FF14Response
+     */
+    public FF14Response doSeal(String num) {
         HttpResponse response = ff14Request(request.getDoSeal(), num);
-        FF14Response ff14Response = JSON.parseObject(response.body(), FF14Response.class);
-        return ff14Response.getCode() == 10000;
+        return JSON.parseObject(response.body(), FF14Response.class);
     }
 
-    public boolean getSealReward(String num) {
+    /**
+     * 获取印章奖励
+     *
+     * @param num 印章天数(signRewardList)
+     * @return FF14Response
+     */
+    public FF14Response getSealReward(String num) {
         HttpResponse response = ff14Request(request.getGetSealReward(), num);
-        FF14Response ff14Response = JSON.parseObject(response.body(), FF14Response.class);
+        return JSON.parseObject(response.body(), FF14Response.class);
 
-        return ff14Response.getCode() == 10000;
     }
 
-    public boolean like() {
+    /**
+     * 点赞/取消点赞
+     *
+     * @return FF14Response
+     */
+    public FF14Response like() {
         HttpResponse response = ff14Request(request.getLike());
-        FF14Response ff14Response = JSON.parseObject(response.body(), FF14LikeResponse.class);
+        return JSON.parseObject(response.body(), FF14LikeResponse.class);
 
-        return ff14Response.getCode() == 10000;
     }
 
+    /**
+     * 印章奖励查询
+     *
+     * @return FF14ItemListResponse
+     */
+    public FF14ItemListResponse itemList() {
+        HttpResponse response = ff14Request(request.getItemList());
+        return JSON.parseObject(response.body(), FF14ItemListResponse.class);
+    }
+
+    /**
+     * 领取印章奖励
+     *
+     * @param num = 当前印章次数
+     * @return 获取的奖励
+     */
+    public String getSealRewardTask(int num) {
+        StringBuilder sealRewardSb = new StringBuilder();
+        FF14ItemListResponse ff14ItemListResponse = itemList();
+        if (ff14ItemListResponse.isSuccess()) {
+            List<FF14ItemListResponse.FF14ItemListData> ff14ItemListData = ff14ItemListResponse.getData();
+            for (int i = 1; i < ff14ItemListData.size(); i++) {
+                if (!ff14ItemListData.get(i).isGet()) {
+                    FF14ItemListResponse.FF14ItemListData item = ff14ItemListData.get(i);
+                    int type = item.getType();
+                    if (type <= num) {
+                        FF14Response sealReward = getSealReward(type + "");
+                        if (sealReward.isSuccess()) {
+                            sealRewardSb.append(item.getNote()).append("-").append(item.getItemName()).append("===");
+                        }
+                    }
+                }
+            }
+        }
+        if (sealRewardSb.isEmpty()) {
+            sealRewardSb.append("无");
+        }
+        return sealRewardSb.toString();
+    }
+
+    /**
+     * 签到日志
+     *
+     * @return FF14MySignLogResponse
+     */
     public FF14MySignLogResponse mySignLog() {
         HttpResponse response = ff14Request(request.getMySignLog());
         return JSON.parseObject(response.body(), FF14MySignLogResponse.class);
 
     }
 
-    public boolean signRewardList() {
+    /**
+     * 查看签到奖励
+     *
+     * @return FF14SignRewardListResponse
+     */
+    public FF14SignRewardListResponse signRewardList() {
         HttpResponse response = ff14Request(request.getSignRewardList());
-        FF14SignRewardListResponse ff14SignRewardListResponse = JSON.parseObject(response.body(), FF14SignRewardListResponse.class);
+        return JSON.parseObject(response.body(), FF14SignRewardListResponse.class);
 
 
-        return ff14SignRewardListResponse.getCode() == 10000;
     }
 
+    /**
+     * 签到
+     *
+     * @return FF14SignInResponse
+     */
     public FF14SignInResponse signIn() {
         HttpResponse response = ff14Request(request.getSignIn());
         return JSON.parseObject(response.body(), FF14SignInResponse.class);
 
     }
 
+    public void likeTask(int num) {
+        int execute = 5 - num;
+        if (execute != 0) {
+            for (int i = 0; i < execute * 2 + 1; i++) {
+                FF14Response like = like();
+                like.isSuccess();
+                try {
+                    TimeUnit.SECONDS.sleep(3);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
 
+
+    public int signInTask() {
+        FF14MySignLogResponse ff14MySignLogResponse = mySignLog();
+        FF14MySignLogResponse.MySignLogData data = ff14MySignLogResponse.getData();
+        int signInDay = data.getCount();
+        boolean todaySignIn = false;
+        if (signInDay > 0) {
+            int size = data.getRows().size();
+            FF14MySignLogResponse.MySignLogData.MySignLogRowData mySignLogRowData = data.getRows().get(size - 1);
+            SimpleDateFormat simpleDateFormatSignTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat simpleDateFormatYearMonth = new SimpleDateFormat("MMdd");
+            try {
+                Date parse = simpleDateFormatSignTime.parse(mySignLogRowData.getSignTime());
+                String signInDate = simpleDateFormatYearMonth.format(parse);
+                String nowDate = simpleDateFormatYearMonth.format(new Date());
+                if (!signInDate.equalsIgnoreCase(nowDate)) {
+                    todaySignIn = true;
+                }
+            } catch (ParseException e) {
+                Notifications.sendAllNotification("意外:signInTask", "时间解析失败");
+                throw new RuntimeException(e);
+            }
+        } else {
+            todaySignIn = true;
+        }
+        if (todaySignIn) {
+            FF14SignInResponse ff14SignInResponse = signIn();
+            if (ff14SignInResponse.isSuccess()) {
+                signInDay = Integer.parseInt(ff14SignInResponse.getData().getTotalDays());
+            }
+        }
+        return signInDay;
+
+    }
 }

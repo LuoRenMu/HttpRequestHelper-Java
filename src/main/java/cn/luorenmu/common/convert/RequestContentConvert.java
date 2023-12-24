@@ -126,6 +126,16 @@ public class RequestContentConvert {
         String[] split = methodStr.split(":");
         try {
             Class<?> aClass = Class.forName("cn.luorenmu.common.utils." + split[0]);
+            Method[] methods = aClass.getMethods();
+            //TODO
+            for (Method method : methods) {
+                if (method.getName().equalsIgnoreCase(split[1])) {
+                    Class<?>[] parameterTypes = method.getParameterTypes();
+                    for (Class<?> parameterType : parameterTypes) {
+                        //TODO
+                    }
+                }
+            }
             Method method = aClass.getMethod(split[1], String.class);
             if (split.length == 2) {
                 return (String) method.invoke(null, "1");

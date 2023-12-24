@@ -2,6 +2,7 @@ package cn.luorenmu;
 
 
 import cn.luorenmu.task.MiHoYoSign;
+import cn.luorenmu.task.RequestTask;
 
 /**
  * @author LoMu
@@ -11,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         MiHoYoSign miHoYoSign = new MiHoYoSign();
         miHoYoSign.isRecentArticleTask();
-      /*  RequestTask requestTask = new RequestTask();
-        requestTask.execute();*/
+        RequestTask requestTask = new RequestTask();
+        requestTask.execute();
     }
 }

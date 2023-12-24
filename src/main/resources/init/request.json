@@ -214,7 +214,7 @@
       ]
     },
     "get_seal_reward": {
-      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online2312/getSealReward",
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/getSealReward",
       "method": "get",
       "params": [
         {
@@ -222,6 +222,42 @@
           "content": "${customize}"
         }
       ],
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
+        }
+      ]
+    },
+    "get_item_list": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/getItemList",
+      "method": "get",
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
+        }
+      ]
+    },
+    "is_login": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/GHome/isLogin",
+      "method": "get",
+      "headers": [
+        {
+          "name": "Cookie",
+          "content": "${cookie}"
+        }
+      ],
+      "params": [
+        {
+          "name": "tempsuid",
+          "content": "${StringUtils:getRandomStrLowerCase:16}"
+        }
+      ]
+    },
+    "item_list": {
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/getItemList",
+      "method": "get",
       "headers": [
         {
           "name": "Cookie",

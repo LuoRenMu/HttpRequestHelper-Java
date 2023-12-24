@@ -32,6 +32,7 @@ public class ServerChanNotification implements Notification {
     }
 
     public boolean sendLongNotification(String title, String message) {
+        log.info("serverChan: 发送通知: {} \n {},", title, message);
         if (title == null) {
             title = "标题意外丢失";
         }

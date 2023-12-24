@@ -31,6 +31,8 @@ public class Request {
         private RequestDetailed like;
         private RequestDetailed doSeal;
         private RequestDetailed getSealReward;
+        private RequestDetailed isLogin;
+        private RequestDetailed itemList;
 
     }
 
