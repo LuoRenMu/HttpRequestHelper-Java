@@ -86,7 +86,7 @@
   },
   "ff14": {
     "my_task_info": {
-      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/myTaskInfo",
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online2312/myTaskInfo",
       "method": "get",
       "headers": [
         {
@@ -127,12 +127,12 @@
       "params": [
         {
           "name": "month",
-          "content": "${StringUtils:yearMonthDayReplace:yyyy-M}"
+          "content": "${StringUtils:yearMonthDayReplace:yyyy-MM}"
         }
       ]
     },
     "do_seal": {
-      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/doSeal",
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online2312/doSeal",
       "method": "post",
       "headers": [
         {
@@ -163,7 +163,7 @@
         },
         {
           "name": "posts_id",
-          "content": 19038
+          "content": 17572
         },
         {
           "name": "parent_id",
@@ -214,7 +214,7 @@
       ]
     },
     "get_seal_reward": {
-      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/getSealReward",
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online2312/getSealReward",
       "method": "get",
       "params": [
         {
@@ -230,7 +230,7 @@
       ]
     },
     "get_item_list": {
-      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/getItemList",
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online2312/getItemList",
       "method": "get",
       "headers": [
         {
@@ -256,7 +256,7 @@
       ]
     },
     "item_list": {
-      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/getItemList",
+      "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online2312/getItemList",
       "method": "get",
       "headers": [
         {

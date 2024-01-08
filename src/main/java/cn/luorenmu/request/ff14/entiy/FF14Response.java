@@ -20,7 +20,7 @@ public class FF14Response {
      */
     public boolean isSuccess() {
         if (code != 10000) {
-            Notifications.sendAllNotification("意外: 请求返回Code未达到预期", msg);
+            Notifications.sendEmailNotify("意外: 请求返回Code未达到预期", "错误代码: " + code + "          错误信息: " + msg);
             return false;
         }
         return true;

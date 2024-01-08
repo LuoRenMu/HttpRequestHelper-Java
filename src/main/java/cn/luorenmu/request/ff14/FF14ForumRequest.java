@@ -1,6 +1,5 @@
 package cn.luorenmu.request.ff14;
 
-import cn.hutool.http.HttpResponse;
 import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.common.request.HttpRequest;
 import cn.luorenmu.common.utils.Notifications;
@@ -23,7 +22,7 @@ public class FF14ForumRequest {
     private static final Request.RequestFF14 request = FileManager.getConfig(Request.class).getFf14();
 
 
-    protected static HttpResponse ff14Request(Request.RequestDetailed requestDetailed, String... args) {
+    protected static String ff14Request(Request.RequestDetailed requestDetailed, String... args) {
         requestDetailed.setRequestType(RequestType.FF14);
         return HttpRequest.execute(requestDetailed, args);
     }
@@ -34,8 +33,7 @@ public class FF14ForumRequest {
      * @return FF14MyTaskInfoResponse
      */
     public FF14MyTaskInfoResponse myTaskInfo() {
-        HttpResponse response = ff14Request(request.getMyTaskInfo());
-        return JSON.parseObject(response.body(), FF14MyTaskInfoResponse.class);
+        return JSON.parseObject(ff14Request(request.getMyTaskInfo()), FF14MyTaskInfoResponse.class);
 
     }
 
@@ -45,8 +43,7 @@ public class FF14ForumRequest {
      * @return FF14Response
      */
     public FF14Response comment() {
-        HttpResponse response = ff14Request(request.getComment());
-        return JSON.parseObject(response.body(), FF14Response.class);
+        return JSON.parseObject(ff14Request(request.getComment()), FF14Response.class);
     }
 
     /**
@@ -56,8 +53,7 @@ public class FF14ForumRequest {
      * @return FF14Response
      */
     public FF14Response doSeal(String num) {
-        HttpResponse response = ff14Request(request.getDoSeal(), num);
-        return JSON.parseObject(response.body(), FF14Response.class);
+        return JSON.parseObject(ff14Request(request.getDoSeal(), num), FF14Response.class);
     }
 
     /**
@@ -67,8 +63,7 @@ public class FF14ForumRequest {
      * @return FF14Response
      */
     public FF14Response getSealReward(String num) {
-        HttpResponse response = ff14Request(request.getGetSealReward(), num);
-        return JSON.parseObject(response.body(), FF14Response.class);
+        return JSON.parseObject(ff14Request(request.getGetSealReward(), num), FF14Response.class);
 
     }
 
@@ -78,8 +73,7 @@ public class FF14ForumRequest {
      * @return FF14Response
      */
     public FF14Response like() {
-        HttpResponse response = ff14Request(request.getLike());
-        return JSON.parseObject(response.body(), FF14LikeResponse.class);
+        return JSON.parseObject(ff14Request(request.getLike()), FF14LikeResponse.class);
 
     }
 
@@ -89,8 +83,7 @@ public class FF14ForumRequest {
      * @return FF14ItemListResponse
      */
     public FF14ItemListResponse itemList() {
-        HttpResponse response = ff14Request(request.getItemList());
-        return JSON.parseObject(response.body(), FF14ItemListResponse.class);
+        return JSON.parseObject(ff14Request(request.getItemList()), FF14ItemListResponse.class);
     }
 
     /**
@@ -129,8 +122,7 @@ public class FF14ForumRequest {
      * @return FF14MySignLogResponse
      */
     public FF14MySignLogResponse mySignLog() {
-        HttpResponse response = ff14Request(request.getMySignLog());
-        return JSON.parseObject(response.body(), FF14MySignLogResponse.class);
+        return JSON.parseObject(ff14Request(request.getMySignLog()), FF14MySignLogResponse.class);
 
     }
 
@@ -140,8 +132,7 @@ public class FF14ForumRequest {
      * @return FF14SignRewardListResponse
      */
     public FF14SignRewardListResponse signRewardList() {
-        HttpResponse response = ff14Request(request.getSignRewardList());
-        return JSON.parseObject(response.body(), FF14SignRewardListResponse.class);
+        return JSON.parseObject(ff14Request(request.getSignRewardList()), FF14SignRewardListResponse.class);
 
 
     }
@@ -152,8 +143,7 @@ public class FF14ForumRequest {
      * @return FF14SignInResponse
      */
     public FF14SignInResponse signIn() {
-        HttpResponse response = ff14Request(request.getSignIn());
-        return JSON.parseObject(response.body(), FF14SignInResponse.class);
+        return JSON.parseObject(ff14Request(request.getSignIn()), FF14SignInResponse.class);
 
     }
 

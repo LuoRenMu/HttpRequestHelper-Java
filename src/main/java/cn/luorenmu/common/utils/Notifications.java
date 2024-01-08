@@ -24,4 +24,12 @@ public class Notifications {
             notification.sendLongNotification(title, message);
         }
     }
+
+    public static void sendEmailNotify(String title, String message) {
+        Setting.AccountNotification user = RunningStorage.accountThreadLocal.get().getNotification();
+        if (!user.getEmail().isBlank()) {
+            Notification notification = new EmailNotification(user.getEmail());
+            notification.sendLongNotification(title, message);
+        }
+    }
 }

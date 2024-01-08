@@ -72,7 +72,7 @@ public class MihoyoForumRequest {
 
 
     private ForumCollectList getCollectionPostList() {
-        HttpResponse execute = cn.luorenmu.common.request.HttpRequest.execute(request.getMihoyo().getArticleCollect());
-        return JSON.parseObject(execute.body(), ForumCollectList.class);
+        String execute = cn.luorenmu.common.request.HttpRequest.execute(request.getMihoyo().getArticleCollect());
+        return JSON.parseObject(execute, ForumCollectList.class);
     }
 }

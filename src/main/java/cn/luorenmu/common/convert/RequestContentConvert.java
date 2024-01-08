@@ -1,9 +1,7 @@
 package cn.luorenmu.common.convert;
 
 import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
 import cn.luorenmu.annotation.impl.RunningStorage;
-import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.common.utils.MatcherData;
 import cn.luorenmu.entiy.RequestType;
 import cn.luorenmu.entiy.config.Request;
@@ -33,13 +31,6 @@ public class RequestContentConvert {
         replaceAddData();
     }
 
-    public static void main(String[] args) {
-        HttpRequest httpRequest = new RequestContentConvert(FileManager.getConfig(Request.class).getMihoyo().getArticleCollect()).requestToGet();
-        HttpResponse execute = httpRequest.execute();
-        System.out.println(httpRequest);
-        System.out.println(execute.body());
-        System.out.println(FileManager.getConfig(Request.class).getMihoyo().getArticleCollect());
-    }
 
     public HttpRequest requestToPost() {
         HTTP_REQUEST.method(cn.hutool.http.Method.POST);

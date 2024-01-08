@@ -19,11 +19,12 @@ import static cn.luorenmu.common.file.FileManager.FILE_PATH;
 public class ReadWriteFile {
 
 
-    public static Map<Class<?>, Object> initConfig() {
+    public static Map<Class<?>, Object> initConfig(boolean remake) {
         Map<Class<?>, Object> config = new HashMap<>();
         for (String s : FILES_NAME) {
             try {
                 String fileName = "." + StringUtils.snakeCaseToCamelCase(s.substring(0, s.lastIndexOf(".")));
+                checkFileThenGeneration(s, remake);
                 String json = readRootFileJson(s);
                 Class<?> aClass = Class.forName(FileManager.PACKAGE_SETTING_PATH + fileName);
                 Object o = JSON.parseObject(json, aClass);
@@ -41,7 +42,6 @@ public class ReadWriteFile {
     public static String readRootFileJson(String filename) {
         String path = FILE_PATH + filename;
         log.debug("read file path : {}", path);
-        checkFileThenGeneration(filename, true);
         StringBuilder sb = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
             String s;

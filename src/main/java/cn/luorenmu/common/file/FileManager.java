@@ -23,12 +23,11 @@ public class FileManager {
     protected static final String FILE_PATH = scanFilePath();
     protected static final String PACKAGE_SETTING_PATH = Setting.class.getPackageName();
     protected static final Set<String> FILES_NAME = new HashSet<>();
-    private static final Map<Class<?>, Object> CONFIG_ENITYS;
+    public static Map<Class<?>, Object> CONFIG_ENITYS;
+
 
     static {
         setFilesName();
-        CONFIG_ENITYS = ReadWriteFile.initConfig();
-        log.info("配置已被加载: {}", CONFIG_ENITYS);
     }
 
     public static void setFilesName() {
