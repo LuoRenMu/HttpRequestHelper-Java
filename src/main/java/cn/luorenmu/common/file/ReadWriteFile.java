@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static cn.luorenmu.common.file.FileManager.FILES_NAME;
-import static cn.luorenmu.common.file.FileManager.FILE_PATH;
+import static cn.luorenmu.common.file.FileManager.ROOT_PATH;
 
 /**
  * @author LoMu
@@ -18,20 +18,19 @@ import static cn.luorenmu.common.file.FileManager.FILE_PATH;
 @Slf4j
 public class ReadWriteFile {
 
-
     public static Map<Class<?>, Object> initConfig(boolean remake) {
         Map<Class<?>, Object> config = new HashMap<>();
         for (String s : FILES_NAME) {
             try {
                 String fileName = "." + StringUtils.snakeCaseToCamelCase(s.substring(0, s.lastIndexOf(".")));
-                checkFileThenGeneration(s, remake);
+                checkFileThenCreate(s, remake);
                 String json = readRootFileJson(s);
                 Class<?> aClass = Class.forName(FileManager.PACKAGE_SETTING_PATH + fileName);
                 Object o = JSON.parseObject(json, aClass);
                 config.put(aClass, o);
             } catch (ClassNotFoundException | StringIndexOutOfBoundsException e) {
                 log.error("文件解析失败 \nfile -> " + s + " <- init failed");
-                throw new RuntimeException(e);
+                throw new RuntimeException();
             }
         }
         log.info("文件解析已完成");
@@ -40,7 +39,7 @@ public class ReadWriteFile {
 
 
     public static String readRootFileJson(String filename) {
-        String path = FILE_PATH + filename;
+        String path = ROOT_PATH + filename;
         log.debug("read file path : {}", path);
         StringBuilder sb = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
@@ -49,6 +48,7 @@ public class ReadWriteFile {
                 sb.append(s).append(System.lineSeparator());
             }
         } catch (IOException e) {
+            log.error("{}: 文件无法被正常读取", filename);
             throw new RuntimeException(e);
         }
         return sb.toString();
@@ -73,12 +73,17 @@ public class ReadWriteFile {
     }
 
 
-    public static void checkFileThenGeneration(String fileName, boolean remake) {
-        String outputFilePath = FILE_PATH + fileName;
+    public static void checkFileThenCreate(String fileName, boolean remake) {
+        String outputFilePath = ROOT_PATH + fileName;
         File file = new File(outputFilePath);
         if (!file.exists() || remake) {
             getFileStreamThenCreate(fileName, outputFilePath);
         }
         log.info("文件 {} 初始化完成", fileName);
+    }
+
+    public static void createRootFile(String fileName) {
+        String outputFilePath = ROOT_PATH + fileName;
+
     }
 }

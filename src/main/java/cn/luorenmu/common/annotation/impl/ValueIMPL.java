@@ -1,11 +1,10 @@
-package cn.luorenmu.annotation.impl;
+package cn.luorenmu.common.annotation.impl;
 
 
 import cn.hutool.core.lang.ClassScanner;
 import cn.luorenmu.Main;
-import cn.luorenmu.annotation.Value;
+import cn.luorenmu.common.annotation.GenerationFile;
 import cn.luorenmu.common.utils.StringUtils;
-import cn.luorenmu.entiy.config.Setting;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
@@ -19,11 +18,11 @@ import java.util.Set;
  * @author LoMu
  * Date 2023.12.08 19:47
  */
-public class RunningStorage {
-    public static ThreadLocal<Setting.Account> accountThreadLocal = new ThreadLocal<>();
+public class ValueIMPL {
+
 
     public static void main(String[] args) throws Exception {
-        ClassScanner annotationScan = new ClassScanner(Value.class.getPackageName());
+        ClassScanner annotationScan = new ClassScanner(GenerationFile.class.getPackageName());
         Set<Class<?>> annotationClass = annotationScan.scan();
         ClassScanner mainScan = new ClassScanner(Main.class.getPackageName());
         Set<Class<?>> allClasses = mainScan.scan();

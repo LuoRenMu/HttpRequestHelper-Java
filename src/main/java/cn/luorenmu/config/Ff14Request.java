@@ -1,5 +1,6 @@
-package cn.luorenmu.entiy.config;
+package cn.luorenmu.config;
 
+import cn.luorenmu.entiy.Request;
 import com.alibaba.fastjson2.PropertyNamingStrategy;
 import com.alibaba.fastjson2.annotation.JSONType;
 import lombok.Data;
@@ -21,4 +22,6 @@ public class Ff14Request {
     private Request.RequestDetailed getSealReward;
     private Request.RequestDetailed isLogin;
     private Request.RequestDetailed itemList;
+    private Request.RequestDetailed characterBindInfo;
+    private Request.RequestDetailed createDynamic;
 }

@@ -1,8 +1,8 @@
 package cn.luorenmu.common.utils;
 
 
-import cn.luorenmu.annotation.impl.RunningStorage;
-import cn.luorenmu.entiy.config.Setting;
+import cn.luorenmu.config.Setting;
+import cn.luorenmu.entiy.RunStorage;
 import cn.luorenmu.notification.Notification;
 import cn.luorenmu.notification.impl.EmailNotification;
 import cn.luorenmu.notification.impl.ServerChanNotification;
@@ -14,7 +14,7 @@ import cn.luorenmu.notification.impl.ServerChanNotification;
 public class Notifications {
 
     public static void sendAllNotification(String title, String message) {
-        Setting.AccountNotification user = RunningStorage.accountThreadLocal.get().getNotification();
+        Setting.AccountNotification user = RunStorage.accountThreadLocal.get().getNotification();
         if (!user.getServerChanKey().isBlank()) {
             Notification notification = new ServerChanNotification(user.getServerChanKey());
             notification.sendLongNotification(title, message);
@@ -26,7 +26,7 @@ public class Notifications {
     }
 
     public static void sendEmailNotify(String title, String message) {
-        Setting.AccountNotification user = RunningStorage.accountThreadLocal.get().getNotification();
+        Setting.AccountNotification user = RunStorage.accountThreadLocal.get().getNotification();
         if (!user.getEmail().isBlank()) {
             Notification notification = new EmailNotification(user.getEmail());
             notification.sendLongNotification(title, message);

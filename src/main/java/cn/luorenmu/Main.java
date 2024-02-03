@@ -1,8 +1,8 @@
 package cn.luorenmu;
 
 
-import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.common.file.ReadWriteFile;
+import cn.luorenmu.entiy.RunStorage;
 import cn.luorenmu.task.MiHoYoSign;
 import cn.luorenmu.task.RequestTask;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Main {
     public static void main(String[] args) {
-        FileManager.CONFIG_ENITYS = ReadWriteFile.initConfig(true);
-        log.info("配置已被加载: {}", FileManager.CONFIG_ENITYS);
+        RunStorage.CONFIG_ENITYS = ReadWriteFile.initConfig(true);
         MiHoYoSign miHoYoSign = new MiHoYoSign();
         miHoYoSign.isRecentArticleTask();
         RequestTask requestTask = new RequestTask();
         requestTask.execute();
+
     }
 }

@@ -4,7 +4,7 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpStatus;
 import cn.luorenmu.common.convert.RequestContentConvert;
 import cn.luorenmu.common.utils.StringUtils;
-import cn.luorenmu.entiy.config.Request;
+import cn.luorenmu.entiy.Request;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
@@ -48,11 +48,11 @@ public class HttpRequest {
             TimeUnit.SECONDS.sleep(5L);
             HttpResponse response = httpRequest.execute();
             String body = response.body();
-            log.debug("HTTPRequest: {} ", httpRequest);
-            log.debug("HTTPResponse: {}", response);
+            log.info("HTTPRequest: URL -> {} \t  METHOD -> {} \t FORM -> {}", httpRequest.getUrl(), httpRequest.getMethod(), httpRequest.form());
+            log.info("HTTPResponse: STATUS -> {}", response.getStatus());
 
             if (response.getStatus() != HttpStatus.HTTP_OK) {
-                log.error("请求状态与预期状态不符 : {} \n {}", requestDetailed, response);
+                log.error("请求状态与预期状态不符 : {} \n {} \n {}", requestDetailed, response, httpRequest);
                 return String.format(NONE_RESPONSE_STR, response.getStatus(), body.replaceAll("\"", ""));
             }
             return body;

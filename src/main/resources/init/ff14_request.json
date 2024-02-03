@@ -1,6 +1,6 @@
 {
   "my_task_info": {
-    "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/myTaskInfo",
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online2312/myTaskInfo",
     "method": "get",
     "headers": [
       {
@@ -41,12 +41,12 @@
     "params": [
       {
         "name": "month",
-        "content": "${StringUtils:yearMonthDayReplace:yyyy-M}"
+        "content": "${StringUtils:yearMonthDayReplace:yyyy-MM}"
       }
     ]
   },
   "do_seal": {
-    "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online${StringUtils:yearMonthDayReplace:yyM}/doSeal",
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/active/online2312/doSeal",
     "method": "post",
     "headers": [
       {
@@ -73,7 +73,7 @@
     "body": [
       {
         "name": "content",
-        "content": "<p>跟签</p>"
+        "content": "<p>comment</p>"
       },
       {
         "name": "posts_id",
@@ -176,6 +176,86 @@
       {
         "name": "Cookie",
         "content": "${cookie}"
+      }
+    ]
+  },
+  "character_bind_info": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/groupAndRole/getCharacterBindInfo",
+    "method": "get",
+    "params": [
+      {
+        "name": "tempsuid",
+        "content": "${StringUtils:getRandomStrLowerCase:16}"
+      },
+      {
+        "name": "platform",
+        "content": "2"
+      }
+    ],
+    "headers": [
+      {
+        "name": "Cookie",
+        "content": "${cookie}"
+      }
+    ]
+  },
+  "create_dynamic": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/dynamic/create",
+    "method": "post",
+    "params": [
+      {
+        "name": "tempsuid",
+        "content": "${StringUtils:getRandomStrLowerCase:16}"
+      }
+    ],
+    "headers": [
+      {
+        "name": "Cookie",
+        "content": "${cookie}"
+      }
+    ],
+    "body": [
+      {
+        "name": "tempsuid",
+        "content": "${StringUtils:getRandomStrLowerCase:16}"
+      },
+      {
+        "name": "scope",
+        "content": "1"
+      },
+      {
+        "name": "content",
+        "content": "Hello everyone, I love FF14 today :${StringUtils:yearMonthDayReplace:yyyy-MM-dd}"
+      }
+    ]
+  },
+  "get_sign_reward": {
+    "url": "https://apiff14risingstones.web.sdo.com/api/home/sign/getSignReward",
+    "method": "post",
+    "params": [
+      {
+        "name": "tempsuid",
+        "content": "${StringUtils:getRandomStrLowerCase:16}"
+      }
+    ],
+    "headers": [
+      {
+        "name": "Cookie",
+        "content": "${cookie}"
+      }
+    ],
+    "body": [
+      {
+        "name": "id",
+        "content": "${customize}"
+      },
+      {
+        "name": "month",
+        "content": "${StringUtils:yearMonthDayReplace:yyMM}"
+      },
+      {
+        "name": "tempsuid",
+        "content": "${StringUtils:getRandomStrLowerCase:16}"
       }
     ]
   }

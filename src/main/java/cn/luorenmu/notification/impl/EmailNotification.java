@@ -2,8 +2,8 @@ package cn.luorenmu.notification.impl;
 
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
-import cn.luorenmu.common.file.FileManager;
-import cn.luorenmu.entiy.config.Setting;
+import cn.luorenmu.config.Setting;
+import cn.luorenmu.entiy.RunStorage;
 import cn.luorenmu.notification.Notification;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @Slf4j
 public class EmailNotification implements Notification {
-    private static final MailAccount MAIL_ACCOUNT = FileManager.getConfig(Setting.class).getGeneral().getMail();
+    private static final MailAccount MAIL_ACCOUNT = RunStorage.getConfig(Setting.class).getGeneral().getMail();
     Set<String> emails;
 
 
@@ -38,7 +38,7 @@ public class EmailNotification implements Notification {
     @Override
     public boolean sendLongNotification(String title, String message) {
         try {
-            log.info("email: 发送通知: {} \n {},", title, message);
+            log.info("email: 发送通知 -> {} : {} \n {},", emails, title, message);
             MailUtil.send(MAIL_ACCOUNT, emails, null, null, title, message, null, true);
         } catch (RuntimeException e) {
             return false;

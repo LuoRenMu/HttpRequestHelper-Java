@@ -1,10 +1,11 @@
 package cn.luorenmu.request.ff14;
 
-import cn.luorenmu.common.file.FileManager;
 import cn.luorenmu.common.request.HttpRequest;
 import cn.luorenmu.common.utils.Notifications;
+import cn.luorenmu.config.Ff14Request;
+import cn.luorenmu.entiy.Request;
 import cn.luorenmu.entiy.RequestType;
-import cn.luorenmu.entiy.config.Request;
+import cn.luorenmu.entiy.RunStorage;
 import cn.luorenmu.request.ff14.entiy.*;
 import com.alibaba.fastjson2.JSON;
 
@@ -19,12 +20,16 @@ import java.util.concurrent.TimeUnit;
  * Date 2023.12.19 16:37
  */
 public class FF14ForumRequest {
-    private static final Request.RequestFF14 request = FileManager.getConfig(Request.class).getFf14();
+    private static final Ff14Request request = RunStorage.getConfig(Ff14Request.class);
 
 
     protected static String ff14Request(Request.RequestDetailed requestDetailed, String... args) {
         requestDetailed.setRequestType(RequestType.FF14);
         return HttpRequest.execute(requestDetailed, args);
+    }
+
+    public FF14Response createDynamic() {
+        return JSON.parseObject(ff14Request(request.getCreateDynamic()), FF14Response.class);
     }
 
     /**
@@ -162,35 +167,98 @@ public class FF14ForumRequest {
         }
     }
 
+    public String sealTask() {
+        FF14MyTaskInfoResponse ff14MyTaskInfoResponse = myTaskInfo();
+        if (ff14MyTaskInfoResponse.isSuccess()) {
+            FF14MyTaskInfoResponse.MyTaskInfoData.MyTaskInfoDayTaskData sealDayTask = ff14MyTaskInfoResponse.getData().getDayTask();
+            likeTask(sealDayTask.getLikeNum());
+
+            if (!sealDayTask.signSealComplete()) {
+                if (sealDayTask.getSignStatus() != 1) {
+                    FF14SignInResponse ff14SignInResponse = signIn();
+                    ff14SignInResponse.isSuccess();
+                }
+                doSeal("1");
+            }
+
+            if (!sealDayTask.likeSealComplete()) {
+                doSeal("2");
+            }
+
+            if (!sealDayTask.commentSealComplete()) {
+                if (sealDayTask.getCommentSeal() > 0) {
+                    doSeal("3");
+                } else {
+                    FF14Response comment = comment();
+                    if (comment.isSuccess()) {
+                        doSeal("3");
+                    }
+                }
+            }
+            FF14MyTaskInfoResponse taskInfo = myTaskInfo();
+            if (taskInfo.isSuccess()) {
+                FF14MyTaskInfoResponse.MyTaskInfoData.MyTaskInfoOnceTaskData onceTask = taskInfo.getData().getOnceTask();
+                FF14MyTaskInfoResponse.MyTaskInfoData.MyTaskInfoDayTaskData nowDayTask = taskInfo.getData().getDayTask();
+
+                String sealRewardStr = getSealRewardTask(Integer.parseInt(onceTask.getSealTotal()));
+                if (nowDayTask.likeSealComplete() && nowDayTask.commentSealComplete() && nowDayTask.signSealComplete()) {
+                    return String.format("盖章奖励: %s , 盖章印记: %s", sealRewardStr, onceTask.getSealTotal());
+                }
+            }
+        }
+        return "已结束或已完成";
+    }
+
+    public String checkThenGetSignRewardTask() {
+        FF14MySignLogResponse ff14MySignLogResponse = mySignLog();
+        if (ff14MySignLogResponse.isSuccess()) {
+            int count = ff14MySignLogResponse.getData().getCount();
+            FF14SignRewardListResponse ff14SignRewardListResponse = signRewardList();
+            if (ff14SignRewardListResponse.isSuccess()) {
+                for (FF14SignRewardListResponse.SignRewardListData datum : signRewardList().getData()) {
+                    if (count >= datum.getRule()) {
+                        if (datum.getIsGet() == 1) {
+                            continue;
+                        }
+                    }
+
+                }
+            }
+        }
+        return "";
+    }
 
     public int signInTask() {
         FF14MySignLogResponse ff14MySignLogResponse = mySignLog();
-        FF14MySignLogResponse.MySignLogData data = ff14MySignLogResponse.getData();
-        int signInDay = data.getCount();
-        boolean todaySignIn = false;
-        if (signInDay > 0) {
-            int size = data.getRows().size();
-            FF14MySignLogResponse.MySignLogData.MySignLogRowData mySignLogRowData = data.getRows().get(size - 1);
-            SimpleDateFormat simpleDateFormatSignTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            SimpleDateFormat simpleDateFormatYearMonth = new SimpleDateFormat("MMdd");
-            try {
-                Date parse = simpleDateFormatSignTime.parse(mySignLogRowData.getSignTime());
-                String signInDate = simpleDateFormatYearMonth.format(parse);
-                String nowDate = simpleDateFormatYearMonth.format(new Date());
-                if (!signInDate.equalsIgnoreCase(nowDate)) {
-                    todaySignIn = true;
+        int signInDay = 0;
+        if (mySignLog().isSuccess()) {
+            FF14MySignLogResponse.MySignLogData data = ff14MySignLogResponse.getData();
+            signInDay = data.getCount();
+            boolean todaySignIn = false;
+            if (signInDay > 0) {
+                int size = data.getRows().size();
+                FF14MySignLogResponse.MySignLogData.MySignLogRowData mySignLogRowData = data.getRows().get(size - 1);
+                SimpleDateFormat simpleDateFormatSignTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                SimpleDateFormat simpleDateFormatYearMonth = new SimpleDateFormat("MMdd");
+                try {
+                    Date parse = simpleDateFormatSignTime.parse(mySignLogRowData.getSignTime());
+                    String signInDate = simpleDateFormatYearMonth.format(parse);
+                    String nowDate = simpleDateFormatYearMonth.format(new Date());
+                    if (!signInDate.equalsIgnoreCase(nowDate)) {
+                        todaySignIn = true;
+                    }
+                } catch (ParseException e) {
+                    Notifications.sendAllNotification("意外:signInTask", "时间解析失败");
+                    throw new RuntimeException(e);
                 }
-            } catch (ParseException e) {
-                Notifications.sendAllNotification("意外:signInTask", "时间解析失败");
-                throw new RuntimeException(e);
+            } else {
+                todaySignIn = true;
             }
-        } else {
-            todaySignIn = true;
-        }
-        if (todaySignIn) {
-            FF14SignInResponse ff14SignInResponse = signIn();
-            if (ff14SignInResponse.isSuccess()) {
-                signInDay = Integer.parseInt(ff14SignInResponse.getData().getTotalDays());
+            if (todaySignIn) {
+                FF14SignInResponse ff14SignInResponse = signIn();
+                if (ff14SignInResponse.isSuccess()) {
+                    signInDay = Integer.parseInt(ff14SignInResponse.getData().getTotalDays());
+                }
             }
         }
         return signInDay;

@@ -1,0 +1,18 @@
+{
+  "notify": [
+    {
+      "response_type": "FF14",
+      "code": 10000,
+      "message": "请求成功",
+      "notify": false,
+      "success": true
+    },
+    {
+      "response_type": "FF14",
+      "code": 10102,
+      "message": "活动已结束^.^",
+      "notify": false,
+      "success": false
+    }
+  ]
+}

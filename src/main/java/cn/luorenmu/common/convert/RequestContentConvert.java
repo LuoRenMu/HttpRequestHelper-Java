@@ -1,10 +1,10 @@
 package cn.luorenmu.common.convert;
 
 import cn.hutool.http.HttpRequest;
-import cn.luorenmu.annotation.impl.RunningStorage;
 import cn.luorenmu.common.utils.MatcherData;
+import cn.luorenmu.entiy.Request;
 import cn.luorenmu.entiy.RequestType;
-import cn.luorenmu.entiy.config.Request;
+import cn.luorenmu.entiy.RunStorage;
 import com.alibaba.fastjson2.JSON;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -20,7 +20,7 @@ import java.util.*;
 
 @Accessors(chain = true)
 public class RequestContentConvert {
-    private final HttpRequest HTTP_REQUEST = HttpRequest.of("12312312");
+    private final HttpRequest HTTP_REQUEST = HttpRequest.of("**********");
     @Setter
     private Request.RequestDetailed requestDetailed;
     private final List<String> args;
@@ -80,14 +80,14 @@ public class RequestContentConvert {
             String content = s.get();
             if (content.equalsIgnoreCase("cookie")) {
                 if (requestDetailed.getRequestType() == RequestType.FF14) {
-                    newParam.setContent(RunningStorage.accountThreadLocal.get().getFf14().getCookie());
+                    newParam.setContent(RunStorage.accountThreadLocal.get().getFf14().getCookie());
                 }
             } else if (content.equalsIgnoreCase("customize")) {
                 //TODO
                 newParam.setContent(args.get(0));
             } else {
                 String classMethodInvoke = findClassMethodInvoke(content);
-                newParam.setContent(classMethodInvoke);
+                newParam.setContent(param.getContent().replace(String.format("${%s}", content), classMethodInvoke));
             }
 
 
@@ -122,19 +122,16 @@ public class RequestContentConvert {
             for (Method method : methods) {
                 if (method.getName().equalsIgnoreCase(split[1])) {
                     Class<?>[] parameterTypes = method.getParameterTypes();
-                    for (Class<?> parameterType : parameterTypes) {
-                        //TODO
+                    if (split.length == 2) {
+                        return (String) method.invoke(null, "");
+                    } else {
+                        return (String) method.invoke(null, split[2]);
                     }
                 }
             }
-            Method method = aClass.getMethod(split[1], String.class);
-            if (split.length == 2) {
-                return (String) method.invoke(null, "1");
-            } else {
-                return (String) method.invoke(null, split[2]);
-            }
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                 InvocationTargetException e) {
+            throw new NoSuchMethodException();
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
     }

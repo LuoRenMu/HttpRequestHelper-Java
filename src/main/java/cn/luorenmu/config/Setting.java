@@ -1,4 +1,4 @@
-package cn.luorenmu.entiy.config;
+package cn.luorenmu.config;
 
 import cn.hutool.extra.mail.MailAccount;
 import cn.luorenmu.common.auto.Automatic;
