@@ -26,10 +26,10 @@ public class FileManager {
 
 
     static {
-        setFilesName();
+        initFilesName();
     }
 
-    public static void setFilesName() {
+    public static void initFilesName() {
         ClassScanner scanner = new ClassScanner(PACKAGE_SETTING_PATH);
         Set<Class<?>> classes = scanner.scan();
         for (Class<?> aClass : classes) {

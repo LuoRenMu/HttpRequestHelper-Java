@@ -3,9 +3,10 @@ package cn.luorenmu;
 
 import cn.luorenmu.common.file.ReadWriteFile;
 import cn.luorenmu.entiy.RunStorage;
-import cn.luorenmu.task.MiHoYoSign;
-import cn.luorenmu.task.RequestTask;
+import cn.luorenmu.timer.TaskHandleCenter;
 import lombok.extern.slf4j.Slf4j;
+
+import static cn.luorenmu.common.annotation.impl.CurrentSettingImpl.scanSettingInject;
 
 /**
  * @author LoMu
@@ -14,11 +15,18 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Main {
     public static void main(String[] args) {
-        RunStorage.CONFIG_ENITYS = ReadWriteFile.initConfig(true);
-        MiHoYoSign miHoYoSign = new MiHoYoSign();
-        miHoYoSign.isRecentArticleTask();
-        RequestTask requestTask = new RequestTask();
-        requestTask.execute();
+        boolean b = false;
+        if (args != null) {
+            for (String arg : args) {
+                if (arg.toUpperCase().startsWith("-initConfig=".toUpperCase())) {
+                    b = Boolean.parseBoolean(arg.replace("-initConfig=", ""));
 
+                }
+            }
+        }
+        RunStorage.CONFIG_ENITYS = ReadWriteFile.initConfig(b);
+        scanSettingInject(Main.class);
+        TaskHandleCenter taskHandleCenter = new TaskHandleCenter();
+        taskHandleCenter.execute();
     }
 }

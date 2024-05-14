@@ -39,7 +39,7 @@ public class MatcherData {
         }
         if (sb.isEmpty()) {
             return Optional.empty();
-        } else if (separateStr != null) {
+        } else if (separateStr != null && !separateStr.isEmpty()) {
             sb.delete(sb.length() - 1, sb.length());
         }
         return Optional.of(sb.toString());
@@ -48,7 +48,7 @@ public class MatcherData {
 
     public static Optional<String> redeemCodes(String content) {
         String pattern = "((?<=<p>)[A-Z0-9]{12}(?=</p>))+";
-        return matcherStr(content, pattern, 3, "|");
+        return matcherStr(content, pattern, 3, ",");
     }
 
 }

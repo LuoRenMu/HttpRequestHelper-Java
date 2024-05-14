@@ -5,6 +5,8 @@ import com.alibaba.fastjson2.annotation.JSONType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * @author LoMu
  * Date 2023.12.20 22:21
@@ -12,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class FF14IsLoginResponse extends FF14Response {
-    private FF14IsLoginData data;
+    private List<FF14IsLoginData> data;
 
     @Data
     @JSONType(naming = PropertyNamingStrategy.SnakeCase)

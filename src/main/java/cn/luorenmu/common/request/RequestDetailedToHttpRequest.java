@@ -1,13 +1,15 @@
-package cn.luorenmu.common.convert;
+package cn.luorenmu.common.request;
 
 import cn.hutool.http.HttpRequest;
 import cn.luorenmu.common.utils.MatcherData;
 import cn.luorenmu.entiy.Request;
 import cn.luorenmu.entiy.RequestType;
 import cn.luorenmu.entiy.RunStorage;
+import cn.luorenmu.exception.MisconfigurationException;
 import com.alibaba.fastjson2.JSON;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -19,18 +21,32 @@ import java.util.*;
  */
 
 @Accessors(chain = true)
-public class RequestContentConvert {
+@Slf4j
+public class RequestDetailedToHttpRequest {
     private final HttpRequest HTTP_REQUEST = HttpRequest.of("**********");
     @Setter
     private Request.RequestDetailed requestDetailed;
     private final List<String> args;
 
-    public RequestContentConvert(Request.RequestDetailed requestDetailed, String... args) {
+
+    public RequestDetailedToHttpRequest(Request.RequestDetailed requestDetailed, String... args) {
         this.requestDetailed = requestDetailed;
         this.args = List.of(args);
         replaceAddData();
     }
 
+    private RequestDetailedToHttpRequest() {
+        args = new ArrayList<>();
+    }
+
+    /**
+     * TODO
+     *
+     * @return TEST OBJECT
+     */
+    public static RequestDetailedToHttpRequest buildTestObject() {
+        return new RequestDetailedToHttpRequest();
+    }
 
     public HttpRequest requestToPost() {
         HTTP_REQUEST.method(cn.hutool.http.Method.POST);
@@ -115,23 +131,29 @@ public class RequestContentConvert {
 
     private String findClassMethodInvoke(String methodStr) {
         String[] split = methodStr.split(":");
+        if (split.length < 2) {
+            throw new MisconfigurationException("不被允许的配置" + methodStr);
+        }
         try {
             Class<?> aClass = Class.forName("cn.luorenmu.common.utils." + split[0]);
             Method[] methods = aClass.getMethods();
-            //TODO
             for (Method method : methods) {
                 if (method.getName().equalsIgnoreCase(split[1])) {
+                    // TODO: 待完善
                     Class<?>[] parameterTypes = method.getParameterTypes();
+                    log.info("反射方法 :{}", methodStr);
                     if (split.length == 2) {
-                        return (String) method.invoke(null, "");
+                        return (String) method.invoke(null);
                     } else {
-                        return (String) method.invoke(null, split[2]);
+                        String[] strings = Arrays.copyOfRange(split, 2, split.length);
+                        return (String) method.invoke(null, (Object[]) strings);
                     }
                 }
             }
             throw new NoSuchMethodException();
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
+            log.error(requestDetailed.toString());
             throw new RuntimeException(e);
         }
     }

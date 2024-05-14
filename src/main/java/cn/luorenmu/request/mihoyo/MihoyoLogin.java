@@ -65,7 +65,6 @@ public class MihoyoLogin {
         mihoyoDeviceFpRequest.setSeedId(StringUtils.getRandomStr(16).toLowerCase());
         post.body(JSON.toJSONString(mihoyoDeviceFpRequest));
         HttpResponse execute = post.execute();
-        System.out.println(execute);
         return JSON.parseObject(execute.body(), MihoyoDeviceFpResponse.class);
     }
 }

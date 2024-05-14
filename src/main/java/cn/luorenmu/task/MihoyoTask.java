@@ -1,13 +1,18 @@
 package cn.luorenmu.task;
 
+import cn.luorenmu.common.cache.FileCache;
 import cn.luorenmu.common.utils.MatcherData;
 import cn.luorenmu.common.utils.Notifications;
+import cn.luorenmu.entiy.TaskCache;
 import cn.luorenmu.request.mihoyo.MihoyoForumRequest;
 import cn.luorenmu.request.mihoyo.entiy.data.ForumArticle;
 import cn.luorenmu.request.mihoyo.entiy.data.ForumCollectList;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author LoMu
@@ -16,7 +21,6 @@ import java.util.*;
 @Slf4j
 public class MihoyoTask {
 
-    private static final Map<String, String> cache = new HashMap<>();
     private static final MihoyoForumRequest request = new MihoyoForumRequest();
 
     public void isRecentArticle() {
@@ -33,15 +37,17 @@ public class MihoyoTask {
                 String redeemCodes;
                 if (redeemCodesOptional.isEmpty()) {
                     log.info("兑换码最新文章已出现,目前兑换码为null");
-                    if (cache.get("empty:" + Thread.currentThread()) == null || System.currentTimeMillis() / 1000 - Long.parseLong(cache.get("empty")) > 60 * 60 * 24) {
-                        cache.put("empty:" + Thread.currentThread(), System.currentTimeMillis() / 1000 + "");
-                    }
                     return;
                 }
                 redeemCodes = redeemCodesOptional.get();
 
-                if (!Objects.equals(cache.get("redeemCodes:" + Thread.currentThread()), redeemCodes)) {
-                    cache.put("redeemCodes:" + Thread.currentThread(), redeemCodes);
+                if (redeemCodes.split(",").length <= 2) {
+                    return;
+                }
+                TaskCache taskCache = FileCache.readCache(Thread.currentThread().getName());
+                if (!Objects.equals(taskCache.getStarRail(), redeemCodes)) {
+                    taskCache.setStarRail(redeemCodes);
+                    FileCache.writeCache(Thread.currentThread().getName(), taskCache);
 
                     log.info("兑换码 : {}", redeemCodes);
                     Notifications.sendAllNotification("星穹铁道新版本兑换码已发放", redeemCodes);

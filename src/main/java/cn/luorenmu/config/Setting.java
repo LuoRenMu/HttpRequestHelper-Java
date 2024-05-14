@@ -63,6 +63,15 @@ public class Setting {
                 return "MihoyoAccount{cookie='******', sToken='******', account='" + account + "', password='******'}";
             }
         }
+
+        @Override
+        public String toString() {
+            return "Account{\n" +
+                    "mihoyo=" + mihoyo +
+                    "\nnotification=" + notification +
+                    "\nff14=" + ff14 +
+                    "\n}";
+        }
     }
 
     @Data

@@ -130,10 +130,6 @@ public class StringUtils {
         return createDS("uTUzziiV9FazyGA7XgVIk287ZczinFRV", i, r);
     }
 
-    public static String getDS(String a) {
-        return getDS();
-    }
-
 
 
     /**

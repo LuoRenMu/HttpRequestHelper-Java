@@ -1,6 +1,7 @@
 package cn.luorenmu.common.auto;
 
 import cn.luorenmu.common.utils.StringUtils;
+import cn.luorenmu.exception.RequestHumanTakeoverException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +24,7 @@ public class Automatic {
                     Method method = classo.getMethod(methodName, classa);
                     method.invoke(object, args);
                 } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    throw new RuntimeException(e);
+                    throw new RequestHumanTakeoverException(e);
                 }
             }
         }

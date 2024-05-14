@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class ReadWriteFile {
                 Object o = JSON.parseObject(json, aClass);
                 config.put(aClass, o);
             } catch (ClassNotFoundException | StringIndexOutOfBoundsException e) {
-                log.error("文件解析失败 \nfile -> " + s + " <- init failed");
+                log.error("文件解析失败 \nfile -> " + s + " <- init error");
                 throw new RuntimeException();
             }
         }
@@ -38,8 +39,8 @@ public class ReadWriteFile {
     }
 
 
-    public static String readRootFileJson(String filename) {
-        String path = ROOT_PATH + filename;
+    public static String readRootFileJson(String fileName) {
+        String path = ROOT_PATH + fileName;
         log.debug("read file path : {}", path);
         StringBuilder sb = new StringBuilder();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path))) {
@@ -48,7 +49,7 @@ public class ReadWriteFile {
                 sb.append(s).append(System.lineSeparator());
             }
         } catch (IOException e) {
-            log.error("{}: 文件无法被正常读取", filename);
+            log.error("\nfile -> " + fileName + " <- read error\t" + e.getMessage());
             throw new RuntimeException(e);
         }
         return sb.toString();
@@ -68,6 +69,7 @@ public class ReadWriteFile {
                 bufferedOutputStream.flush();
             }
         } catch (IOException e) {
+            log.error("\nfile -> " + fileName + " <-  path -> + outputPath output error.\t" + e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -82,8 +84,61 @@ public class ReadWriteFile {
         log.info("文件 {} 初始化完成", fileName);
     }
 
-    public static void createRootFile(String fileName) {
-        String outputFilePath = ROOT_PATH + fileName;
+    public static void createDirs(String fileName) {
+        if (fileName.contains("/") || fileName.contains("\\")) {
+            String f = fileName.replaceAll("\\\\", "/");
+            int indexOf = f.lastIndexOf("/");
+            String substring = f.substring(0, indexOf);
+            File file = new File(rootPathFileName(substring));
+            if (!file.exists()) {
+                boolean ignored = file.mkdirs();
+            }
+        }
+    }
 
+    public static OutputStream createRootFile(String fileName) {
+        createDirs(fileName);
+
+        String path = rootPathFileName(fileName);
+
+        File file = new File(path);
+        if (!file.exists()) {
+            try {
+                boolean ignored = file.createNewFile();
+            } catch (IOException e) {
+                log.error("\nfile -> " + fileName + " <- create error\t" + e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            return new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            log.error("\nio stream -> " + path + " <- file not found\t" + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String rootPathFileName(String fileName) {
+        return ROOT_PATH + fileName;
+    }
+
+    public static <T> void entiyWriteFile(String name, T t) {
+        try (OutputStream outputStream = createRootFile(name)) {
+            String jsonString = JSON.toJSONString(t);
+            outputStream.write(jsonString.getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            log.error("\nio stream -> " + name + " <- write failed");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean fileExists(String fileName) {
+        return new File(rootPathFileName(fileName)).exists();
+    }
+
+    public static InputStream readRootFile(String fileName) throws FileNotFoundException {
+        String path = ROOT_PATH + fileName;
+        File file = new File(path);
+        return new FileInputStream(file);
     }
 }
