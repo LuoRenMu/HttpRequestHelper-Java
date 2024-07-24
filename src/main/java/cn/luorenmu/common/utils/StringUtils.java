@@ -50,7 +50,7 @@ public class StringUtils {
     public static String camelCaseToSnakeCase(String substring) {
         int[] ints = upperCaseIndex(substring);
         if (ints.length == 0) {
-            return substring;
+            return substring.toLowerCase();
         }
         StringBuilder stringBuilder = new StringBuilder();
         int lastIndex = 0;
@@ -64,9 +64,15 @@ public class StringUtils {
             lastIndex = anInt;
         }
         stringBuilder.append(substring.substring(lastIndex));
-        return stringBuilder.toString();
+        return stringBuilder.toString().toLowerCase();
     }
 
+    /**
+     * 返回大写字母索引位置 除去忽略首字母
+     *
+     * @param str str
+     * @return
+     */
     public static int[] upperCaseIndex(String str) {
         char[] charArray = str.toCharArray();
         List<Integer> integers = new ArrayList<>();
@@ -107,7 +113,6 @@ public class StringUtils {
     }
 
 
-
     /**
      * 第一个字符大写
      *
@@ -131,7 +136,6 @@ public class StringUtils {
     }
 
 
-
     /**
      * 创建DS算法
      *
@@ -144,5 +148,4 @@ public class StringUtils {
         String c = DigestUtils.md5Hex("salt=" + n + "&t=" + i + "&r=" + r);
         return String.format("%s,%s,%s", i, r, c);
     }
-
 }

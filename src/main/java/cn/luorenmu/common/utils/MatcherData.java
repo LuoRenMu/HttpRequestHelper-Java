@@ -13,8 +13,13 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class MatcherData {
-    public static Optional<String> scanReplaceFieldName(String s) {
+    public static Optional<String> scanMethodFieldName(String s) {
         String pattern = "(?<=\\$\\{)(.*)(?=})";
+        return matcherStr(s, pattern, 1, null);
+    }
+
+    public static Optional<String> scanReplaceFieldName(String s) {
+        String pattern = "(?<=\\#\\{)(.*)(?=})";
         return matcherStr(s, pattern, 1, null);
     }
 

@@ -3,7 +3,6 @@ package cn.luorenmu.common.request;
 import cn.hutool.http.HttpRequest;
 import cn.luorenmu.common.utils.MatcherData;
 import cn.luorenmu.entiy.Request;
-import cn.luorenmu.entiy.RequestType;
 import cn.luorenmu.entiy.RunStorage;
 import cn.luorenmu.exception.MisconfigurationException;
 import com.alibaba.fastjson2.JSON;
@@ -28,6 +27,9 @@ public class RequestDetailedToHttpRequest {
     private Request.RequestDetailed requestDetailed;
     private final List<String> args;
 
+    {
+        HTTP_REQUEST.header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36 Edg/126.0.0.0");
+    }
 
     public RequestDetailedToHttpRequest(Request.RequestDetailed requestDetailed, String... args) {
         this.requestDetailed = requestDetailed;
@@ -84,30 +86,27 @@ public class RequestDetailedToHttpRequest {
      * @return RequestParam
      */
     private List<Request.RequestParam> replaceParamsReturnNew(List<Request.RequestParam> params) {
-        List<Request.RequestParam> newParams = new ArrayList<>();
+        List<Request.RequestParam> newParams = new ArrayList<>(params);
         for (Request.RequestParam param : params) {
-            Request.RequestParam newParam = new Request.RequestParam(param);
-            Optional<String> s = MatcherData.scanReplaceFieldName(param.getContent());
+            Optional<String> s = MatcherData.scanMethodFieldName(param.getContent());
 
             if (s.isEmpty()) {
-                newParams.add(newParam);
+                newParams.add(param);
                 continue;
             }
             String content = s.get();
             if (content.equalsIgnoreCase("cookie")) {
-                if (requestDetailed.getRequestType() == RequestType.FF14) {
-                    newParam.setContent(RunStorage.accountThreadLocal.get().getFf14().getCookie());
-                }
+
+                // TODO 根据请求类型选择cookie
+                param.setContent(RunStorage.accountThreadLocal.get().getFf14().getCookie());
+
             } else if (content.equalsIgnoreCase("customize")) {
                 //TODO
-                newParam.setContent(args.get(0));
+                param.setContent(args.get(0));
             } else {
                 String classMethodInvoke = findClassMethodInvoke(content);
-                newParam.setContent(param.getContent().replace(String.format("${%s}", content), classMethodInvoke));
+                param.setContent(param.getContent().replace(String.format("${%s}", content), classMethodInvoke));
             }
-
-
-            newParams.add(newParam);
 
         }
         return newParams;
@@ -132,16 +131,16 @@ public class RequestDetailedToHttpRequest {
     private String findClassMethodInvoke(String methodStr) {
         String[] split = methodStr.split(":");
         if (split.length < 2) {
+            log.error("不被允许的配置 {}  requsetDetailed : {}", methodStr, requestDetailed.toString());
             throw new MisconfigurationException("不被允许的配置" + methodStr);
         }
         try {
             Class<?> aClass = Class.forName("cn.luorenmu.common.utils." + split[0]);
             Method[] methods = aClass.getMethods();
             for (Method method : methods) {
-                if (method.getName().equalsIgnoreCase(split[1])) {
-                    // TODO: 待完善
-                    Class<?>[] parameterTypes = method.getParameterTypes();
-                    log.info("反射方法 :{}", methodStr);
+                // TODO: 形参匹配
+                if (method.getName().equalsIgnoreCase(split[1]) && method.getParameterCount() == split.length - 2) {
+
                     if (split.length == 2) {
                         return (String) method.invoke(null);
                     } else {
@@ -151,15 +150,16 @@ public class RequestDetailedToHttpRequest {
                 }
             }
             throw new NoSuchMethodException();
-        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException |
+                 InvocationTargetException |
                  NoSuchMethodException e) {
-            log.error(requestDetailed.toString());
+            log.error("Http request failed requestDetailed : {} ", requestDetailed.toString());
             throw new RuntimeException(e);
         }
     }
 
     private String paramToUrl(String url, List<Request.RequestParam> requestParams) {
-        Optional<String> s = MatcherData.scanReplaceFieldName(url);
+        Optional<String> s = MatcherData.scanMethodFieldName(url);
         if (s.isPresent()) {
             String methodInvoke = findClassMethodInvoke(s.get());
             url = url.replace(String.format("${%s}", s.get()), methodInvoke);
@@ -174,7 +174,7 @@ public class RequestDetailedToHttpRequest {
         for (Request.RequestParam param : requestParams) {
             newUrl.append(param.getName());
             newUrl.append("=");
-            Optional<String> contentOptional = MatcherData.scanReplaceFieldName(param.getContent());
+            Optional<String> contentOptional = MatcherData.scanMethodFieldName(param.getContent());
             String content = param.getContent();
             if (contentOptional.isPresent()) {
                 if (contentOptional.get().equalsIgnoreCase("customize")) {

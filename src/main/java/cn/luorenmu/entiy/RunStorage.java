@@ -1,6 +1,7 @@
 package cn.luorenmu.entiy;
 
-import cn.luorenmu.config.Setting;
+import cn.luorenmu.entiy.config.Setting;
+import com.alibaba.fastjson2.JSONObject;
 
 import java.util.Map;
 
@@ -10,10 +11,9 @@ import java.util.Map;
  */
 public class RunStorage {
     public static final ThreadLocal<Setting.Account> accountThreadLocal = new ThreadLocal<>();
-    public static Map<Class<?>, Object> CONFIG_ENITYS;
+    public static Map<String, JSONObject> CONFIG_ENITYS;
 
-    @SuppressWarnings("unchecked")
-    public static <T> T getConfig(Class<T> tClass) {
-        return (T) CONFIG_ENITYS.get(tClass);
+    public static JSONObject getConfig(String tClass) {
+        return CONFIG_ENITYS.get(tClass);
     }
 }

@@ -1,7 +1,7 @@
 package cn.luorenmu.common.utils;
 
-import cn.luorenmu.config.MihoyoRequest;
 import cn.luorenmu.entiy.RunStorage;
+import cn.luorenmu.entiy.config.request.MihoyoRequest;
 
 import javax.crypto.Cipher;
 import java.nio.charset.StandardCharsets;
@@ -26,7 +26,7 @@ public class RSAUtils {
 
     public static String encrypt(String str) throws Exception {
         //base64编码的公钥
-        byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(RunStorage.getConfig(MihoyoRequest.class).getRequestPass().getRsPublicKey());
+        byte[] decoded = org.apache.commons.codec.binary.Base64.decodeBase64(RunStorage.getConfig("request").to(MihoyoRequest.class).getRequestPass().getRsPublicKey());
         RSAPublicKey pubKey = (RSAPublicKey) KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(decoded));
         //RSA加密
         Cipher cipher = Cipher.getInstance("RSA");

@@ -29,7 +29,6 @@ public class Request {
         private List<RequestParam> params;
         private List<RequestParam> body;
         private List<RequestParam> headers;
-        private RequestType requestType;
     }
 
     @Data
