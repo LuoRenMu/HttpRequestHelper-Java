@@ -65,11 +65,11 @@ public class WebPageScreenshot {
         });
     }
 
-    private BufferedImage imageCropLimit(int x, int y, int h, int w, BufferedImage image) {
-        if (w < 0) {
+    private BufferedImage imageCropLimit(int x, int y, int w, int h, BufferedImage image) {
+        if (w <= 0) {
             w = image.getWidth() + w;
         }
-        if (h < 0) {
+        if (h <= 0) {
             h = image.getHeight() + h;
         }
         return image.getSubimage(x, y, w, h);
